@@ -1,0 +1,15 @@
+version: '3.9'
+
+name: rt-chat
+
+services:
+  db:
+    container_name: postgres-db
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./db/postgres-data:/var/lib/postgresql/data
+    ports: 
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
