@@ -1,24 +1,39 @@
 import SignupForm from "@/components/auth/SignupForm";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
-import { getProviders, signIn } from "next-auth/react";
-import React from "react";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { useParams } from "next/navigation";
+// import { getServerSession } from "next-auth";
+import { getProviders, signIn, useSession } from "next-auth/react";
+import React, { useEffect } from "react";
+// import { authOptions } from "../api/auth/[...nextauth]";
 import LoginForm from "@/components/auth/LoginForm";
+import { useRouter } from "next/navigation";
 
 const AuthPage = ({
   providers,
+  action,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { action } = useParams();
+  const session = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      router.push("/");
+    }
+  }, [router, session]);
+
   return (
     <>
-      {action === "signup" ? <SignupForm /> : <LoginForm />}
       {providers &&
         Object.values(providers).map((provider) => {
+          if (provider.id === "credentials") {
+            return action === "signup" ? (
+              <SignupForm key={provider.id} />
+            ) : (
+              <LoginForm key={provider.id} />
+            );
+          }
           return (
-            <div key={provider.name} style={{ marginBottom: 0 }}>
-              <button onClick={() => signIn(provider.id)}>
+            <div key={provider.id} style={{ marginBottom: 0 }}>
+              <button onClick={async () => signIn(provider.id)}>
                 Sign in with {provider.name}
               </button>
             </div>
@@ -29,19 +44,16 @@ const AuthPage = ({
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+  // const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (session) {
-    return { redirect: { destination: "/" } };
-  }
+  // if (session) {
+  //   return { redirect: { destination: "/" } };
+  // }
 
-  if (context.query.action !== "signup" && context.query.action !== "login") {
-    return { redirect: { destination: "/" } };
-  }
   const providers = await getProviders();
 
   return {
-    props: { providers: providers ?? [] },
+    props: { providers: providers ?? [], action: context.query.action },
   };
 }
 

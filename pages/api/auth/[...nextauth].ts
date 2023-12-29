@@ -24,18 +24,28 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials) {
+        if (!credentials?.email || !credentials.password) {
+          throw new Error("Invalid credentials");
+        }
+
         const user = await client.user.findUnique({
-          where: { email: credentials?.email },
+          where: { email: credentials.email },
         });
 
-        const isMatch = bcrypt.compareSync(
-          credentials?.password as string,
-          user?.password as string
-        );
-        if (user && isMatch) {
-          return user;
+        if (!user || !user.password) {
+          throw new Error("Email or password is invalid");
         }
-        return null;
+
+        const isMatch = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isMatch) {
+          throw new Error("Email or password is invalid");
+        }
+
+        return user;
       },
     }),
     GithubProvider({

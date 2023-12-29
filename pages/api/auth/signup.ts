@@ -14,12 +14,12 @@ export default async function signup(
 
     const isExist = await prisma.user.findUnique({ where: { email } });
 
-    if (!!isExist) {
-      res.status(400).send({ message: "User is already exist" });
+    if (!isExist) {
+      res.status(409).send({ message: "User is already exist" });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
-    
+
     await prisma.user.create({
       data: {
         name,
@@ -30,7 +30,6 @@ export default async function signup(
 
     res.status(201).send({ message: "Signup successful" });
   } catch (error) {
-    console.error("Error:", error);
     res.status(500).send({ error: "Internal Server Error" });
   }
 }

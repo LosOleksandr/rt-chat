@@ -6,15 +6,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TSignupCreds } from "@/types/auth";
 import validationSchema from "@/schemas/auth/signupSchema";
 import Link from "next/link";
+import { useToast } from "../ui/use-toast";
 
 const SignupForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<TSignupCreds>({
+    criteriaMode: "all",
     resolver: zodResolver(validationSchema),
   });
+
+  const { toast } = useToast();
 
   const onSubmit = async (data: TSignupCreds) => {
     const res = await fetch("/api/auth/signup", {
@@ -26,6 +31,16 @@ const SignupForm = () => {
         ...data,
       }),
     });
+    if (res.status === 409) {
+      const { message } = await res.json();
+      setError("root.ServerError", {
+        message,
+      });
+      toast({
+        title: message,
+        description: "Try again please",
+      });
+    }
     if (res.status === 201) {
       await signIn("credentials", { ...data });
     }
@@ -57,6 +72,10 @@ const SignupForm = () => {
           label="Password confirm"
           errors={errors}
         />
+
+        {errors.root?.ServerError && (
+          <p className="text-rose-400">{errors.root?.ServerError.message}</p>
+        )}
 
         <button>Submit</button>
         <Link href={"/auth/login"}> Already have an acount? Log In.</Link>
