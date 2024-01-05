@@ -1,16 +1,19 @@
+import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
 import React from "react";
 
-const Users = () => {
+const UsersPage = () => {
   const { data: session } = useSession();
   return (
-    <>
-      <div className="mb-4">Hi, {session?.user.name}</div>
+    <Layout>
+      <main>
+        <div className="mb-4">Hi, {session?.user.name}</div>
 
-      <Button onClick={() => signOut()}>Logout</Button>
-    </>
+        <Button onClick={() => signOut()}>Logout</Button>
+      </main>
+    </Layout>
   );
 };
 
-export default Users;
+export default UsersPage;
