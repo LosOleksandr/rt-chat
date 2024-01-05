@@ -1,11 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 210, 40%, 96.1%;
+    --primary: 217.2, 32.6%, 17.5%;
+    --secondary: 210, 40%, 98%;
+    --accent: 258.3, 89.5%, 66.3%;
+    --accent-hover: 262.1, 83.3%, 57.8%;
+    --danger: 0, 84.2%, 60.2%;
+    --success: 142.1, 70.6%, 45.3%;
+  }
+
   body {
-    font-family: "Inter", sans-serif;
-    background-color: #000;
-    color: #fff;
+    font-family: "Ubuntu", sans-serif;
+    @apply bg-background text-primary;
   }
 }

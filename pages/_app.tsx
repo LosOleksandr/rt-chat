@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/toaster";
+import { Ubuntu } from "next/font/google";
+const ubuntu = Ubuntu({ weight: ["400", "500", "700"], subsets: ["latin"] });
 
 export default function App({
   Component,
@@ -24,6 +26,11 @@ export default function App({
           sizes="32x32"
           href="/images/favicon-32x32.png"
         />
+        <style jsx global>{`
+          html {
+            font-family: ${ubuntu.style.fontFamily};
+          }
+        `}</style>
       </Head>
       <SessionProvider session={session}>
         <Component {...pageProps} />

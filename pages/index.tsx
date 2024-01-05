@@ -1,28 +1,44 @@
-import { Inter } from "next/font/google";
-import Link from "next/link";
-import SignOutBtn from "@/components/auth/SignOutBtn";
-import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-const inter = Inter({ subsets: ["latin"] });
+import { GetServerSidePropsContext } from "next";
+import { authOptions } from "./api/auth/[...nextauth]";
+import { getServerSession } from "next-auth";
+import Image from "next/image";
 
 export default function Home() {
-  const session = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (session.status === "unauthenticated") {
-      router.push("/auth/login");
-    }
-  }, [router, session]);
+  const { push } = useRouter();
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex min-h-screen flex-col items-center justify-center p-24 w-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-200 from-0% to-violet-900 to-70%">`}
     >
-      <Link href={"/auth/signup"}>sign Up</Link>
-      <SignOutBtn>Sign Out</SignOutBtn>
+      <Image
+        src={"/images/logo.png"}
+        alt="RT-CHAT LOGO"
+        width={105}
+        height={105}
+      />
+      <h1 className="text-5xl mb-6">
+        <span className="text-accent">rt</span>CHAT
+      </h1>
+      <h2 className="text-xl mb-6 overflow-hidden whitespace-nowrap animate-typewriter border-r-2">
+        Real-Time Conversations. Anytime, Anywhere
+      </h2>
+      <Button className="px-8" onClick={() => push("/auth/login")}>
+        Sign Up
+      </Button>
     </main>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (session) {
+    return { redirect: { destination: "/users" } };
+  }
+
+  return {
+    props: { session },
+  };
 }

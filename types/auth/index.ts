@@ -4,3 +4,8 @@ export type TSignupCreds = {
   password: string;
   passwordConfirm: string;
 };
+
+export enum AuthActions {
+  SIGNUP = "signup",
+  LOGIN = "login",
+}

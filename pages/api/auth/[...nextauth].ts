@@ -1,16 +1,13 @@
 import bcrypt from "bcrypt";
 import NextAuth, { NextAuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaClient } from "@prisma/client";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-const clientId = process.env.GITHUB_ID;
-const clientSecret = process.env.GITHUB_SECRET;
-
-if (!clientId || !clientSecret) {
-  throw new Error("GitHub client ID or client secret is not defined.");
-}
+import DiscordProvider from "next-auth/providers/discord";
+import SpotifyProvider from "next-auth/providers/spotify";
+import ENV from "@/config/env";
 
 const client = new PrismaClient();
 
@@ -49,17 +46,36 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GithubProvider({
-      clientId,
-      clientSecret,
+      clientId: ENV.PROVIDERS.GITHUB_CLIENT_ID,
+      clientSecret: ENV.PROVIDERS.GITHUB_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      clientId: ENV.PROVIDERS.GOOGLE_CLIENT_ID,
+      clientSecret: ENV.PROVIDERS.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
+    DiscordProvider({
+      clientId: ENV.PROVIDERS.DISCORD_CLIENT_ID,
+      clientSecret: ENV.PROVIDERS.DISCORD_CLIENT_SECRET,
+    }),
+    SpotifyProvider({
+      clientId: ENV.PROVIDERS.SPOTIFY_CLIENT_ID,
+      clientSecret: ENV.PROVIDERS.SPOTIFY_CLIENT_SECRET,
     }),
   ],
-  callbacks: {},
-  secret: process.env.SECRET,
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/login",
+  },
+  secret: ENV.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
-  },
-  pages: {
-    signIn: "/auth/signup",
   },
 };
 

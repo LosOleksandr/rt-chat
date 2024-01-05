@@ -11,10 +11,9 @@ export default async function signup(
 ) {
   try {
     const { name, email, password }: TSignupCreds = await req.body;
-
     const isExist = await prisma.user.findUnique({ where: { email } });
 
-    if (!isExist) {
+    if (isExist) {
       res.status(409).send({ message: "User is already exist" });
     }
 
@@ -30,6 +29,6 @@ export default async function signup(
 
     res.status(201).send({ message: "Signup successful" });
   } catch (error) {
-    res.status(500).send({ error: "Internal Server Error" });
+    res.status(500).send({ error: "Unexpected Server Error" });
   }
 }
