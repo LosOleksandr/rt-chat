@@ -12,6 +12,7 @@ export default async function signup(
   try {
     const { name, email, password }: TSignupCreds = await req.body;
     const isExist = await prisma.user.findUnique({ where: { email } });
+    console.log('isExist: ', isExist);
 
     if (isExist) {
       res.status(409).send({ message: "User is already exist" });
