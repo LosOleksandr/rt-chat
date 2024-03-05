@@ -24,7 +24,7 @@ export default function Home() {
       <h2 className="text-xl mb-6 overflow-hidden whitespace-nowrap animate-typewriter border-r-2">
         Real-Time Conversations. Anytime, Anywhere
       </h2>
-      <Button className="px-8" onClick={() => push("/auth/login")}>
+      <Button className="px-8" onClick={() => push("/auth/signup")}>
         Sign Up
       </Button>
     </main>

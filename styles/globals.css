@@ -16,6 +16,6 @@
 
   body {
     font-family: "Ubuntu", sans-serif;
-    @apply bg-background text-primary;
+    @apply bg-background dark:bg-primary dark:text-secondary text-primary;
   }
 }

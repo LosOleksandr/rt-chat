@@ -1,19 +1,15 @@
-import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { signOut, useSession } from "next-auth/react";
-import React from "react";
+import UsersLayout from "@/components/UsersLayout";
+import { useSession } from "next-auth/react";
+import React, { ReactElement } from "react";
+import { NextPageWithLayout } from "../_app";
 
-const UsersPage = ({}) => {
+const UsersPage: NextPageWithLayout = ({}) => {
   const { data: session } = useSession();
-  return (
-    <Layout>
-      <main>
-        <div className="mb-4">Hi, {session?.user.name}</div>
+  return <section className="">Hi, {session?.user.name}</section>;
+};
 
-        <Button onClick={() => signOut()}>Logout</Button>
-      </main>
-    </Layout>
-  );
+UsersPage.getLayout = function getLayout(page: ReactElement) {
+  return <UsersLayout>{page}</UsersLayout>;
 };
 
 export default UsersPage;

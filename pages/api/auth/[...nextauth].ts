@@ -69,6 +69,21 @@ export const authOptions: NextAuthOptions = {
       clientSecret: ENV.PROVIDERS.SPOTIFY_CLIENT_SECRET,
     }),
   ],
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+    jwt: async ({ user, token }) => {
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
+    },
+  },
+
   pages: {
     signIn: "/auth/login",
     error: "/auth/login",
