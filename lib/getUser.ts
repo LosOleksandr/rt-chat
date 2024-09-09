@@ -14,6 +14,5 @@ export const getUser = async (id: string) => {
   } catch (error) {
     console.error("Error in getUser:", error);
     throw new Error("Failed to fetch user");
-    
   }
 };

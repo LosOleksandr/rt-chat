@@ -28,7 +28,6 @@ export const authOptions: NextAuthOptions = {
         const user = await client.user.findUnique({
           where: { email: credentials.email },
         });
-        console.log("user: ", user);
 
         if (!user || !user.password) {
           throw new Error("Email or password is invalid");
@@ -74,16 +73,12 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, token }) => {
       if (session?.user) {
         session.user.id = token.sub;
-        // session.user.phone = token.phone;
-        // session.user.description = token.description;
       }
       return session;
     },
     jwt: async ({ user, token }) => {
       if (user) {
         token.uid = user.id;
-        // token.phone = user.phone;
-        // token.description = user.description;
       }
       return token;
     },

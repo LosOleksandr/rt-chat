@@ -1,20 +1,42 @@
 import UsersLayout from "@/components/UsersLayout";
+import AccountForm from "@/components/account/AccountForm";
 import AccountInfo from "@/components/account/AccountInfo";
 import UserAvatar from "@/components/sidebar/UserAvatar";
-import { getUser } from "@/helpers/getUser";
+import { Button } from "@/components/ui/button";
+import { getUser } from "@/lib/getUser";
 import { NextPageWithLayout } from "@/pages/_app";
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import React, { ReactElement } from "react";
+import { IconEdit } from "@tabler/icons-react";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import React, { ReactElement, useState } from "react";
 
 const AccountPage: NextPageWithLayout = ({
   user,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [userInfo, setUserInfo] = useState(user);
+
   return (
     <section className="flex flex-col justify-center px-11 gap-4 h-full bg-secondary dark:bg-primary border-x-2 ">
       <span className="border w-full h-px"></span>
       <UserAvatar withFileInput={true} size="lg" />
       <span className="border w-full h-px"></span>
-      <AccountInfo user={user} />
+      <div className="flex items-center text-lg">
+        <h3>User Info</h3>
+        {!isEditing && (
+          <Button variant={"ghost"} onClick={() => setIsEditing(true)}>
+            <IconEdit />
+          </Button>
+        )}
+      </div>
+      {isEditing ? (
+        <AccountForm
+          setIsEditing={setIsEditing}
+          user={userInfo}
+          setUserInfo={setUserInfo}
+        />
+      ) : (
+        <AccountInfo setIsEditing={setIsEditing} user={userInfo} />
+      )}
       <span className="border w-full h-px"></span>
     </section>
   );
@@ -24,7 +46,7 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
   return <UsersLayout>{page}</UsersLayout>;
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const user = await getUser(params?.acount_id as string);
 
   if (!user) {
@@ -32,13 +54,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   return { props: { user } };
-};
-
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
 };
 
 export default AccountPage;
