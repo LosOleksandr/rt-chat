@@ -5,7 +5,7 @@ import { NextPageWithLayout } from "../_app";
 
 const UsersPage: NextPageWithLayout = ({}) => {
   const { data: session } = useSession();
-  return <section className="">Hi, {session?.user.name}</section>;
+  return <section>Hi, {session?.user.name}</section>;
 };
 
 UsersPage.getLayout = function getLayout(page: ReactElement) {

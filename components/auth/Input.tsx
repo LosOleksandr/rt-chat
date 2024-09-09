@@ -4,8 +4,12 @@ import React, { FC, SyntheticEvent, forwardRef, useState } from "react";
 import { FieldErrors } from "react-hook-form";
 import { Button } from "../ui/button";
 import { IconEye, IconEyeClosed } from "@tabler/icons-react";
+import { Textarea } from "../ui/textarea";
 
-type TInput = React.InputHTMLAttributes<HTMLInputElement> & {
+type TInput = React.InputHTMLAttributes<
+  HTMLInputElement | HTMLTextAreaElement
+> & {
+  as: "input" | "textarea";
   onChange: (e: SyntheticEvent) => void;
   onBlur: (e: SyntheticEvent) => void;
   label?: string;
@@ -14,8 +18,8 @@ type TInput = React.InputHTMLAttributes<HTMLInputElement> & {
 
 export const Input: FC<TInput> = forwardRef(
   (
-    { onBlur, onChange, label, errors, ...props },
-    ref: React.Ref<HTMLInputElement>
+    { as, onBlur, onChange, label, errors, ...props },
+    ref: React.Ref<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -29,34 +33,51 @@ export const Input: FC<TInput> = forwardRef(
       >
         {label}
         <div className="relative">
-          <input
-            className={`block w-full bg-slate-50 border-2 focus:border-accent outline-none rounded-md p-1 mt-1 transition-colors ${
-              errors?.[props.name as keyof TSignupCreds] || errors?.root
-                ? "border-danger focus:border-red-600 animate-shaking"
-                : ""
-            }`}
-            onBlur={onBlur}
-            onChange={onChange}
-            ref={ref}
-            {...props}
-            type={showPassword ? "text" : props.type}
-          />
-          {props.type === "password" && (
-            <Button
-              tabIndex={-1}
-              type="button"
-              className="absolute top-0 right-0"
-              variant={"ghost"}
-              onClick={() => {
-                setShowPassword(!showPassword);
-              }}
-            >
-              {showPassword ? (
-                <IconEyeClosed size={24} />
-              ) : (
-                <IconEye size={24} />
+          {as === "input" && (
+            <>
+              <input
+                className={`block w-full bg-slate-50 border-2 focus:border-accent outline-none rounded-md p-1 mt-1 transition-colors ${
+                  errors?.[props.name as keyof TSignupCreds] || errors?.root
+                    ? "border-danger focus:border-red-600 animate-shaking"
+                    : ""
+                }`}
+                onBlur={onBlur}
+                onChange={onChange}
+                ref={ref as React.Ref<HTMLInputElement>}
+                type={showPassword ? "text" : props.type}
+                {...props}
+              />
+              {props.type === "password" && (
+                <Button
+                  tabIndex={-1}
+                  type="button"
+                  className="absolute top-0 right-0"
+                  variant={"ghost"}
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                >
+                  {showPassword ? (
+                    <IconEyeClosed size={24} />
+                  ) : (
+                    <IconEye size={24} />
+                  )}
+                </Button>
               )}
-            </Button>
+            </>
+          )}
+          {as === "textarea" && (
+            <Textarea
+              className={`block w-full bg-slate-50 border-2 focus:border-accent outline-none rounded-md p-1 mt-1 transition-colors resize-none dark:bg-secondary ${
+                errors?.[props.name as keyof TSignupCreds] || errors?.root
+                  ? "border-danger focus:border-red-600 animate-shaking"
+                  : ""
+              }`}
+              onBlur={onBlur}
+              onChange={onChange}
+              ref={ref as React.Ref<HTMLTextAreaElement>}
+              {...props}
+            />
           )}
         </div>
         <ErrorMessage
