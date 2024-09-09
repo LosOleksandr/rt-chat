@@ -9,3 +9,4 @@ export enum AuthActions {
   SIGNUP = "signup",
   LOGIN = "login",
 }
+
