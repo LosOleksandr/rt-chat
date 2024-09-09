@@ -9,20 +9,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import accountCredsSchema from "@/schemas/account/accountCredsSchema";
 
 type TAccountForm = {
-  isEditing: boolean;
-  setIsEditing: (bool: boolean) => void;
   user: User;
+  setIsEditing: (mode: boolean) => void;
+  setUserInfo: (user: User) => void;
 };
 
-const AccountForm = ({ isEditing, setIsEditing, user }: TAccountForm) => {
+const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<TAccountCreds>({ resolver: zodResolver(accountCredsSchema) });
 
   const onSubmit = async (data: TAccountCreds) => {
-    const res = await fetch("/api/account", {
+    const res = await fetch("/api/users/update", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -31,19 +32,24 @@ const AccountForm = ({ isEditing, setIsEditing, user }: TAccountForm) => {
         ...data,
       }),
     });
-    if (res.ok) {
-      setIsEditing(false);
+
+    if (!res.ok) {
+      setError("root.serverError", {
+        message: "Oops, unable to update user credentials. Try later please.",
+      });
+      return;
     }
+
+    const { data: updatedData } = await res.json();
+
+    setIsEditing(false);
+    setUserInfo(updatedData.user);
   };
   return (
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={`${
-          isEditing
-            ? "border-2 border-accent rounded-xl"
-            : "border-2 border-transparent"
-        } py-4 px-11 grid gap-4 w-full relative`}
+        className={`${"border-2 border-accent rounded-xl"} py-4 px-11 grid gap-4 w-full relative`}
       >
         <>
           <Input
@@ -82,6 +88,11 @@ const AccountForm = ({ isEditing, setIsEditing, user }: TAccountForm) => {
             errors={errors}
             defaultValue={user.description !== null ? user.description : ""}
           />
+          {errors.root?.serverError && (
+            <small className="text-center text-danger">
+              {errors.root?.serverError.message}
+            </small>
+          )}
           <div className="grid grid-cols-2 gap-2 mt-4">
             <Button disabled={isSubmitting}>{"Save"}</Button>
             <Button variant={"destructive"} onClick={() => setIsEditing(false)}>
