@@ -49,7 +49,7 @@ const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={`${"border-2 border-accent rounded-xl"} py-4 px-11 grid gap-4 w-full relative`}
+        className={`${"border-2 border-accent rounded-xl"} py-4 px-11 flex flex-col gap-4 w-full relative`}
       >
         <>
           <Input
@@ -101,7 +101,7 @@ const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
           </div>
         </>
         {isSubmitting && (
-          <div className="grid place-content-center w-full backdrop-blur-sm rounded-xl absolute h-full">
+          <div className="grid place-content-center w-full backdrop-blur-sm rounded-xl absolute top-0 left-0 h-full">
             <div className="flex gap-2">
               <LoadingSpinner />
               <p>Updating user information</p>

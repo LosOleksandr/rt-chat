@@ -22,23 +22,25 @@ const AuthPage = ({
   }, [status, push]);
 
   return (
-    <section className="h-screen flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-lg border-2 border-accent rounded-xl bg-white px-12 py-8">
-        <Image
-          src={"/images/logo.png"}
-          alt="RT-CHAT LOGO"
-          width={46}
-          height={46}
-          className="m-auto"
-        />
-        <h1 className="text-xl text-center mb-4">
-          {action === AuthActions.SIGNUP
-            ? "Create an account in rtChat"
-            : "Sign in to your account"}
-        </h1>
-        <AuthForm providers={providers} action={action} />
-      </div>
-    </section>
+    <main className="bg-background">
+      <section className="h-screen flex flex-col items-center justify-center px-4">
+        <div className="w-full max-w-lg border-2 border-accent rounded-xl bg-background_secondary px-12 py-8">
+          <Image
+            src={"/images/logo.png"}
+            alt="RT-CHAT LOGO"
+            width={46}
+            height={46}
+            className="m-auto"
+          />
+          <h1 className="text-xl text-center mb-4">
+            {action === AuthActions.SIGNUP
+              ? "Create an account in rtChat"
+              : "Sign in to your account"}
+          </h1>
+          <AuthForm providers={providers} action={action} />
+        </div>
+      </section>
+    </main>
   );
 };
 

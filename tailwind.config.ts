@@ -19,13 +19,36 @@ const config = {
     },
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        primary: "hsl(var(--primary))",
-        secondary: "hsl(var(--secondary))",
-        accent: "hsl(var(--accent))",
-        accentHover: "hsl(var(--accent-hover))",
-        danger: "hsl(var(--danger))",
-        success: "hsl(vat(--success))",
+        background: {
+          DEFAULT: "hsl(var(--background))",
+          secondary: "hsl(var(--background-secondary))",
+          foreground: "hsl(var(--background-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          hover: "hsl(var(--accent-hover))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        danger: {
+          DEFAULT: "hsl(var(--danger))",
+          hover: "hsl(var(--danger-hover))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          hover: "hsl(var(--success-hover))",
+        },
+        border: {
+          DEFAULT: "hsl(vat(--border))",
+          foreground: "hsl(vat(--border-foreground))",
+        },
       },
       keyframes: {
         "accordion-down": {

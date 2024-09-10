@@ -5,7 +5,6 @@ import { NextPageWithLayout } from "../_app";
 
 const UsersPage: NextPageWithLayout = ({}) => {
   const { data: session } = useSession();
-  console.log('session: ', session);
   return <section>Hi, {session?.user.name}</section>;
 };
 

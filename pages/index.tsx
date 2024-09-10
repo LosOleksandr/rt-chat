@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-center p-24 w-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-200 from-0% to-violet-900 to-70%">`}
+      className={`flex min-h-screen flex-col text-primary items-center justify-center p-24 w-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-200 from-0% to-violet-900 to-70%">`}
     >
       <Image
         src={"/images/logo.png"}
