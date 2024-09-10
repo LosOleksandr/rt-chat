@@ -10,26 +10,51 @@ type TAccountInfo = {
 
 const AccountInfo = ({ user }: TAccountInfo) => {
   const userAccountDetails = [
-    { name: "username", value: user?.name, icon: <IconUser /> },
-    { name: "email", value: user?.email, icon: <IconMail /> },
-    { name: "phone", value: user?.phone, icon: <IconPhone /> },
-    { name: "about me", value: user?.description, icon: <IconUser /> },
+    {
+      name: "username",
+      value: user?.name,
+      icon: <IconUser className="h-8 w-8" />,
+    },
+    {
+      name: "email",
+      value: user?.email,
+      icon: <IconMail className="h-8 w-8" />,
+    },
+    {
+      name: "phone",
+      value: user?.phone,
+      icon: <IconPhone className="h-8 w-8" />,
+    },
   ];
 
   return (
     <>
-      <ul className="grid gap-2">
+      <ul className="flex flex-col gap-4">
         {userAccountDetails.map(({ name, value, icon }) => {
           return (
-            <li key={name} className="flex gap-2 items-center">
+            <li
+              key={name}
+              className="grid grid-cols-[32px_auto] gap-4 items-center "
+            >
               {icon}
-              <p>
+              <p
+                className={`break-words overflow-hidden leading-4  ${
+                  name === "about me" && ""
+                }`}
+              >
                 {!!value ? value : "- - -"}
-                <span className="block text-sm capitalize">{name}</span>
+
+                <span className="block text-sm capitalize mt-2">{name}</span>
               </p>
             </li>
           );
         })}
+        <li className="mt-4">
+          <p className={"break-words overflow-hidden leading-4 "}>
+            {!!user.description ? user.description : "- - -"}
+            <span className="block text-sm capitalize mt-2">About me</span>
+          </p>
+        </li>
       </ul>
     </>
   );

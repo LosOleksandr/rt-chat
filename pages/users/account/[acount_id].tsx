@@ -16,10 +16,10 @@ const AccountPage: NextPageWithLayout = ({
   const [userInfo, setUserInfo] = useState(user);
 
   return (
-    <section className="flex flex-col justify-center px-11 gap-4 h-full bg-secondary dark:bg-primary border-x-2 ">
-      <span className="border w-full h-px"></span>
+    <section className="flex flex-col w-full max-w-xl justify-self-center justify-center px-11 gap-4 h-full bg-background-secondary border-x-2 ">
+      <span className="border border-border w-full h-px" />
       <UserAvatar withFileInput={true} size="lg" />
-      <span className="border w-full h-px"></span>
+      <span className="border border-border w-full h-px" />
       <div className="flex items-center text-lg">
         <h3>User Info</h3>
         {!isEditing && (
@@ -37,7 +37,7 @@ const AccountPage: NextPageWithLayout = ({
       ) : (
         <AccountInfo setIsEditing={setIsEditing} user={userInfo} />
       )}
-      <span className="border w-full h-px"></span>
+      <span className="border border-border w-full h-px" />
     </section>
   );
 };

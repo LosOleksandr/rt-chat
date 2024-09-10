@@ -14,7 +14,7 @@ const SearchInput = () => {
       <input
         onChange={(e) => setValue(e.currentTarget.value)}
         value={value}
-        className="w-full p-2 pl-10  border border-primary rounded-2xl focus:border-accent outline-none peer transition-colors"
+        className="w-full p-2 pl-10 bg-transparent border border-border rounded-2xl focus:border-accent outline-none peer transition-colors"
         placeholder="Search"
         name="search"
         type="text"
