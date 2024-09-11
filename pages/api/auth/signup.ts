@@ -1,9 +1,7 @@
 import { TSignupCreds } from "@/types/auth";
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export default async function signup(
   req: NextApiRequest,
