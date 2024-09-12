@@ -1,5 +1,5 @@
 import React from "react";
-import Input from "../auth/Input";
+import Input from "../ui/input";
 import { useForm } from "react-hook-form";
 import { TAccountCreds } from "@/types/account";
 import { Button } from "../ui/button";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Input from "./Input";
+import Input from "../ui/input";
 import { Button } from "../ui/button";
 import { LiteralUnion, useForm } from "react-hook-form";
 import { ClientSafeProvider, signIn } from "next-auth/react";
