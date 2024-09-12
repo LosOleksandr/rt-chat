@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Input from "./Input";
+import Input from "../ui/input";
 import { Button } from "../ui/button";
 import { LiteralUnion, useForm } from "react-hook-form";
 import { ClientSafeProvider, signIn } from "next-auth/react";
@@ -152,7 +152,7 @@ const AuthForm = ({ providers, action }: TAuthForm) => {
         <Button disabled={isLoading}>Submit</Button>
       </form>
       <div className="w-full h-px bg-accent relative mt-8 mb-8">
-        <span className="absolute bg-background_secondary -top-3 px-2 left-1/2 -translate-x-1/2">
+        <span className="absolute bg-background-secondary -top-3 px-2 left-1/2 -translate-x-1/2">
           Or continue with
         </span>
       </div>

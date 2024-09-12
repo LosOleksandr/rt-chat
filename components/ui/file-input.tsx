@@ -1,15 +1,25 @@
-import { IconPhotoPlus } from "@tabler/icons-react";
-import React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import React, { forwardRef, InputHTMLAttributes } from "react";
 
-const FileInput = ({}) => {
-  return (
-    <div className="absolute bottom-2 right-2 text-white text-sm bg-black rounded-md hover:bg-black/50 hover:scale-105">
-      <label className="cursor-pointer" title="Browse files">
-        <IconPhotoPlus />
-        <input type="file" className="hidden" />
-      </label>
-    </div>
-  );
-};
+type TFileInput = {
+  asChild?: boolean;
+} & InputHTMLAttributes<HTMLInputElement>;
+
+const FileInput = forwardRef<HTMLInputElement, TFileInput>(
+  ({ asChild, className, children, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div";
+
+    return (
+      <Comp
+        className={`absolute bottom-2 right-2 text-primary-foreground text-sm bg-primary rounded-md hover:bg-black/90 dark:hover:bg-white/90 hover:scale-105 ${className}`}
+      >
+        <label className="cursor-pointer" title="Browse files">
+          {children}
+          <input type="file" className="hidden" ref={ref} {...props} />
+        </label>
+      </Comp>
+    );
+  }
+);
 
 export default FileInput;

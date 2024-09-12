@@ -2,16 +2,16 @@ import { TSignupCreds } from "@/types/auth";
 import { ErrorMessage } from "@hookform/error-message";
 import React, { FC, SyntheticEvent, forwardRef, useState } from "react";
 import { FieldErrors } from "react-hook-form";
-import { Button } from "../ui/button";
+import { Button } from "./button";
 import { IconEye, IconEyeClosed } from "@tabler/icons-react";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "./textarea";
 
 type TInput = React.InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
 > & {
   as: "input" | "textarea";
-  onChange: (e: SyntheticEvent) => void;
-  onBlur: (e: SyntheticEvent) => void;
+  onChange?: (e: SyntheticEvent) => void;
+  onBlur?: (e: SyntheticEvent) => void;
   label?: string;
   errors?: FieldErrors;
 };
@@ -36,7 +36,7 @@ export const Input: FC<TInput> = forwardRef(
           {as === "input" && (
             <>
               <input
-                className={`block w-full bg-transparent border-2 border-border  focus:border-accent outline-none rounded-md p-1 mt-1 transition-colors ${
+                className={`block w-full bg-transparent border-2 border-border focus:border-accent outline-none rounded-md p-1 mt-1 transition-colors ${
                   errors?.[props.name as keyof TSignupCreds] || errors?.root
                     ? "border-danger focus:border-red-600 animate-shaking"
                     : ""

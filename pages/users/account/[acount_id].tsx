@@ -18,7 +18,13 @@ const AccountPage: NextPageWithLayout = ({
   return (
     <section className="flex flex-col w-full max-w-xl justify-self-center justify-center px-11 gap-4 h-full bg-background-secondary border-x-2 ">
       <span className="border border-border w-full h-px" />
-      <UserAvatar withFileInput={true} size="lg" />
+      <UserAvatar
+        className=""
+        withFileInput={true}
+        size="2xl"
+        src={userInfo.image}
+        alt={userInfo.name}
+      />
       <span className="border border-border w-full h-px" />
       <div className="flex items-center text-lg">
         <h3>User Info</h3>

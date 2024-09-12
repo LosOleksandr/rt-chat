@@ -1,50 +1,56 @@
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import React from "react";
+import React, { forwardRef, RefAttributes } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { cva, VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import { AvatarProps } from "@radix-ui/react-avatar";
+import getInitials from "@/lib/getInitials";
+import { IconPhotoPlus } from "@tabler/icons-react";
 import FileInput from "../ui/file-input";
 
+const avatarVariants = cva("mx-auto overflow-visible", {
+  variants: {
+    size: {
+      icon: "w-5 h-5 text-xs bg-transparent",
+      sm: "w-8 h-8 text-sm",
+      md: "w-10 h-10 text-md",
+      lg: "w-20 h-20 text-lg",
+      xl: "w-24 h-24 text-xl",
+      "2xl": "w-28 h-28 text-2xl",
+    },
+  },
+  defaultVariants: {
+    size: "md",
+  },
+});
+
 type TUserAvatar = {
-  size?: "sm" | "md" | "lg";
+  src?: string;
+  alt: string;
   withFileInput?: boolean;
-};
+} & Omit<AvatarProps & RefAttributes<HTMLSpanElement>, "ref"> &
+  VariantProps<typeof avatarVariants>;
 
-const setAvatarSize = (size: TUserAvatar["size"]) => {
-  switch (size) {
-    case "sm":
-      return "w-10 h-10 text-md";
-    case "md":
-      return "w-20 h-20 text-md";
-    case "lg":
-      return "w-36 h-36 text-4xl";
-    default:
-      return "w-10 h-10 text-sm";
+const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
+  ({ className, src, alt, size, withFileInput, ...props }, ref) => {
+    const initials = getInitials(alt);
+    return (
+      <Avatar
+        ref={ref}
+        className={cn(avatarVariants({ size, className }))}
+        {...props}
+      >
+        <AvatarImage className="rounded-full" src={src || ""} alt={alt || ""} />
+        <AvatarFallback>{initials}</AvatarFallback>
+        {withFileInput ? (
+          <FileInput asChild>
+            <IconPhotoPlus />{" "}
+          </FileInput>
+        ) : null}
+      </Avatar>
+    );
   }
-};
-const UserAvatar = ({ size, withFileInput = false }: TUserAvatar) => {
-  const { data: session } = useSession();
+);
 
-  const avatarSize = setAvatarSize(size);
-  return (
-    <div className={`relative self-center ${avatarSize} `}>
-      {session?.user.image ? (
-        <>
-          <Image
-            src={session.user.image}
-            alt={`${session.user.name} avatar`}
-            fill
-            className="absolute top-0 left-0 rounded-full"
-          />
-          {withFileInput ? <FileInput /> : null}
-        </>
-      ) : (
-        <div className="flex justify-center items-center bg-slate-400 w-full h-full rounded-full">
-          <span className="uppercase font-extrabold text-secondary">
-            {session?.user.name && session?.user.name[0]}{" "}
-          </span>
-        </div>
-      )}
-    </div>
-  );
-};
+UserAvatar.displayName = "User Avatar";
 
 export default UserAvatar;
