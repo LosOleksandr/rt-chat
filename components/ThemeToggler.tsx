@@ -5,12 +5,11 @@ import { IconMoon } from "@tabler/icons-react";
 
 const ThemeToggler = () => {
   const { theme, setTheme } = useTheme();
-  console.log("theme: ", theme);
 
   const isDarkMode = theme === "dark";
   return (
     <div className="flex gap-2 items-center">
-      <IconMoon />
+      <IconMoon size={20} />
       <p>Dark Mode</p>
       <Switch
         checked={isDarkMode}

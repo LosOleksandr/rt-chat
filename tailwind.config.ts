@@ -46,8 +46,8 @@ const config = {
           hover: "hsl(var(--success-hover))",
         },
         border: {
-          DEFAULT: "hsl(vat(--border))",
-          foreground: "hsl(vat(--border-foreground))",
+          DEFAULT: "hsl(var(--border))",
+          foreground: "hsl(var(--border-foreground))",
         },
       },
       keyframes: {
