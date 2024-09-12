@@ -1,10 +1,11 @@
 import React, { forwardRef, RefAttributes } from "react";
-import FileInput from "../ui/file-input";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { AvatarProps } from "@radix-ui/react-avatar";
 import getInitials from "@/lib/getInitials";
+import { IconPhotoPlus } from "@tabler/icons-react";
+import FileInput from "../ui/file-input";
 
 const avatarVariants = cva("mx-auto overflow-visible", {
   variants: {
@@ -40,7 +41,11 @@ const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
       >
         <AvatarImage className="rounded-full" src={src || ""} alt={alt || ""} />
         <AvatarFallback>{initials}</AvatarFallback>
-        {withFileInput ? <FileInput /> : null}
+        {withFileInput ? (
+          <FileInput asChild>
+            <IconPhotoPlus />{" "}
+          </FileInput>
+        ) : null}
       </Avatar>
     );
   }
