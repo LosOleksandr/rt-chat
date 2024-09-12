@@ -6,13 +6,11 @@ type TFileInput = {
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const FileInput = forwardRef<HTMLInputElement, TFileInput>(
-  ({ asChild, className, children, ...props }, ref) => {
+  ({ asChild, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "div";
 
     return (
-      <Comp
-        className={`absolute bottom-2 right-2 text-primary-foreground text-sm bg-primary rounded-md hover:bg-black/90 dark:hover:bg-white/90 hover:scale-105 ${className}`}
-      >
+      <Comp className="absolute bottom-2 right-2 text-primary-foreground text-sm bg-primary rounded-md hover:bg-black/90 dark:hover:bg-white/90 hover:scale-105">
         <label className="cursor-pointer" title="Browse files">
           {children}
           <input type="file" className="hidden" ref={ref} {...props} />
