@@ -9,9 +9,9 @@ import { Button } from "../ui/button";
 import { IconLogout, IconMenu2 } from "@tabler/icons-react";
 import SearchInput from "./SearchInput";
 import { signOut, useSession } from "next-auth/react";
-import UserAvatar from "./UserAvatar";
 import Link from "next/link";
 import ThemeToggler from "../ThemeToggler";
+import UserAvatar from "./UserAvatar";
 
 const SidebarMenu = () => {
   const { data: session } = useSession();
@@ -30,7 +30,11 @@ const SidebarMenu = () => {
               className="flex items-center gap-2"
               href={`users/account/${session?.user.id}`}
             >
-              <UserAvatar />
+              <UserAvatar
+                size={"icon"}
+                src={session?.user.image || ""}
+                alt={session?.user.name || ""}
+              />
               My Account
             </Link>
           </DropdownMenuItem>
