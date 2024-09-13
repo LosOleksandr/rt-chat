@@ -1,10 +1,9 @@
-import React from "react";
-import SidebarMenu from "./SidebarMenu";
+import React, { ReactNode } from "react";
 
-const Sidebar = () => {
+const Sidebar = ({ children }: { children: ReactNode }) => {
   return (
     <aside className="hidden md:block bg-background-secondary p-2">
-      <SidebarMenu />
+      {children}
     </aside>
   );
 };

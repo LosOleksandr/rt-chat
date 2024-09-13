@@ -7,7 +7,7 @@ import getInitials from "@/lib/getInitials";
 import { IconPhotoPlus } from "@tabler/icons-react";
 import FileInput from "../ui/file-input";
 
-const avatarVariants = cva("mx-auto overflow-visible", {
+const avatarVariants = cva("mx-auto overflow-visible border-2 border-accent", {
   variants: {
     size: {
       icon: "w-5 h-5 text-xs bg-transparent",
@@ -27,16 +27,24 @@ type TUserAvatar = {
   src?: string;
   alt: string;
   withFileInput?: boolean;
+  isOnline?: boolean;
 } & Omit<AvatarProps & RefAttributes<HTMLSpanElement>, "ref"> &
   VariantProps<typeof avatarVariants>;
 
 const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
-  ({ className, src, alt, size, withFileInput, ...props }, ref) => {
+  ({ className, src, alt, size, withFileInput, isOnline, ...props }, ref) => {
     const initials = getInitials(alt);
     return (
       <Avatar
         ref={ref}
-        className={cn(avatarVariants({ size, className }))}
+        className={cn(
+          avatarVariants({ size, className }),
+          `${
+            isOnline
+              ? "after:h-2 after:w-2 after:bg-success after:absolute after:top-o after:right-0 after:rounded-full"
+              : null
+          }`
+        )}
         {...props}
       >
         <AvatarImage className="rounded-full" src={src || ""} alt={alt || ""} />
