@@ -7,8 +7,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { IconLogout, IconMenu2 } from "@tabler/icons-react";
-import SearchInput from "./SearchInput";
-import { signOut, useSession } from "next-auth/react";
+  import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import ThemeToggler from "../ThemeToggler";
 import UserAvatar from "./UserAvatar";
@@ -28,7 +27,7 @@ const SidebarMenu = () => {
           <DropdownMenuItem>
             <Link
               className="flex items-center gap-2"
-              href={`users/account/${session?.user.id}`}
+              href={`/users/account/${session?.user.id}`}
             >
               <UserAvatar
                 size={"icon"}
@@ -53,7 +52,6 @@ const SidebarMenu = () => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <SearchInput />
     </div>
   );
 };

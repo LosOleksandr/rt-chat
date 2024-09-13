@@ -16,7 +16,7 @@ const AccountPage: NextPageWithLayout = ({
   const [userInfo, setUserInfo] = useState(user);
 
   return (
-    <section className="flex flex-col w-full max-w-xl justify-self-center justify-center px-11 gap-4 h-full bg-background-secondary border-x-2 ">
+    <section className="flex flex-col w-full lg:max-w-xl md:max-w-md justify-self-center justify-center px-11 gap-4 h-full md:bg-background-secondary md:border-x-2 ">
       <span className="border border-border w-full h-px" />
       <UserAvatar
         className=""

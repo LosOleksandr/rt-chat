@@ -23,8 +23,8 @@ const AuthPage = ({
 
   return (
     <main className="bg-background text-primary">
-      <section className="h-screen flex flex-col items-center justify-center px-4">
-        <div className="w-full max-w-lg border-2 border-accent rounded-xl bg-background-secondary px-12 py-8">
+      <section className="h-screen overflow-auto flex flex-col items-center justify-center p-2 md:px-4">
+        <div className="w-full min-h-max overflow-auto sm:h-max max-w-lg border-2 border-accent rounded-xl bg-background-secondary px-3 sm:px-12 py-8">
           <Image
             src={"/images/logo.png"}
             alt="RT-CHAT LOGO"
