@@ -1,16 +1,22 @@
 import React from "react";
 import Sidebar from "./sidebar/Sidebar";
-import MobileMenu from "./mobile/MobileMenu";
+import SidebarList from "./sidebar/SidebarList";
+import MobileFooter from "./mobile/MobileFooter";
+import MobileFooterList from "./mobile/MobileFooterList";
 
 const UsersLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main>
-      <section className="text-primary md:grid md:grid-cols-[50px_30%_1fr] h-screen bg-background">
-        <Sidebar />
+      <div className="text-primary md:grid md:grid-cols-[50px_30%_1fr] h-screen bg-background">
+        <Sidebar>
+          <SidebarList />
+        </Sidebar>
         <div className="bg-accent"></div>
-        <MobileMenu />
         {children}
-      </section>
+        <MobileFooter>
+          <MobileFooterList />
+        </MobileFooter>
+      </div>
     </main>
   );
 };
