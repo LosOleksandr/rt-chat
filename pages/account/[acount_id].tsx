@@ -3,11 +3,13 @@ import AccountForm from "@/components/account/AccountForm";
 import AccountInfo from "@/components/account/AccountInfo";
 import UserAvatar from "@/components/sidebar/UserAvatar";
 import { Button } from "@/components/ui/button";
-import { getUser } from "@/lib/getUser";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 import { NextPageWithLayout } from "@/pages/_app";
 import { IconEdit } from "@tabler/icons-react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getServerSession } from "next-auth";
 import React, { ReactElement, useState } from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 const AccountPage: NextPageWithLayout = ({
   user,
@@ -52,12 +54,14 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
   return <UsersLayout>{page}</UsersLayout>;
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const user = await getUser(params?.acount_id as string);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!user) {
-    return { redirect: { destination: "/users", permanent: false } };
+  if (!session?.user.email) {
+    return { redirect: { destination: "/auth/login", permanent: false } };
   }
+
+  const user = await getCurrentUser(context.params?.acount_id as string);
 
   return { props: { user } };
 };
