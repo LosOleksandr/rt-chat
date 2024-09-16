@@ -1,3 +1,4 @@
+import UsersLayout from "@/components/conversations/layout";
 import AccountForm from "@/components/account/AccountForm";
 import AccountInfo from "@/components/account/AccountInfo";
 import UserAvatar from "@/components/sidebar/UserAvatar";
@@ -6,15 +7,15 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { NextPageWithLayout } from "@/pages/_app";
 import { IconEdit } from "@tabler/icons-react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getServerSession } from "next-auth";
 import React, { ReactElement, useState } from "react";
-import { User } from "@prisma/client";
-import UsersLayout from "@/components/users/layout";
+import { authOptions } from "../api/auth/[...nextauth]";
 
-const AccountPage: NextPageWithLayout<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ user }) => {
+const AccountPage: NextPageWithLayout = ({
+  user,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState<User>(user);
+  const [userInfo, setUserInfo] = useState(user);
 
   return (
     <section className="flex flex-col w-full lg:max-w-xl md:max-w-md justify-self-center justify-center px-11 gap-4 h-full md:bg-background-secondary md:border-x-2 ">
@@ -23,8 +24,8 @@ const AccountPage: NextPageWithLayout<
         className=""
         withFileInput={true}
         size="2xl"
-        src={userInfo.image || ""}
-        alt={userInfo.name || ""}
+        src={userInfo.image}
+        alt={userInfo.name}
       />
       <span className="border border-border w-full h-px" />
       <div className="flex items-center text-lg">
@@ -53,14 +54,16 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
   return <UsersLayout>{page}</UsersLayout>;
 };
 
-export const getServerSideProps = (async (context) => {
-  const user = await getCurrentUser(context);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!user) {
+  if (!session?.user.email) {
     return { redirect: { destination: "/auth/login", permanent: false } };
   }
 
-  return { props: { user: JSON.parse(JSON.stringify(user)) } };
-}) satisfies GetServerSideProps<{ user: User }>;
+  const user = await getCurrentUser(context);
+
+  return { props: { user } };
+};
 
 export default AccountPage;
