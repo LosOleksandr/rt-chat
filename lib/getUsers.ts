@@ -1,6 +1,8 @@
+import prisma from "./prisma";
+
 const getUsers = async (email: string) => {
   try {
-    const users = await prisma?.user.findMany({
+    const users = await prisma.user.findMany({
       where: { NOT: { email } },
       orderBy: { createdAt: "desc" },
       omit: {
