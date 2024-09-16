@@ -10,12 +10,13 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import React, { ReactElement, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { User } from "@prisma/client";
 
-const AccountPage: NextPageWithLayout = ({
-  user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const AccountPage: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState(user);
+  const [userInfo, setUserInfo] = useState<User>(user);
 
   return (
     <section className="flex flex-col w-full lg:max-w-xl md:max-w-md justify-self-center justify-center px-11 gap-4 h-full md:bg-background-secondary md:border-x-2 ">
@@ -24,8 +25,8 @@ const AccountPage: NextPageWithLayout = ({
         className=""
         withFileInput={true}
         size="2xl"
-        src={userInfo.image}
-        alt={userInfo.name}
+        src={userInfo.image || ""}
+        alt={userInfo.name || ""}
       />
       <span className="border border-border w-full h-px" />
       <div className="flex items-center text-lg">
@@ -54,16 +55,20 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
   return <UsersLayout>{page}</UsersLayout>;
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = (async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session?.user.email) {
+  if (!session?.user) {
     return { redirect: { destination: "/auth/login", permanent: false } };
   }
 
-  const user = await getCurrentUser(context.params?.acount_id as string);
+  const user = await getCurrentUser(context.params?.account_id as string);
 
-  return { props: { user } };
-};
+  if (!user) {
+    return { notFound: true };
+  }
+
+  return { props: { user: JSON.parse(JSON.stringify(user)) } };
+}) satisfies GetServerSideProps<{ user: User }>;
 
 export default AccountPage;

@@ -4,6 +4,7 @@ import Link from "next/link";
 import useRoutes from "@/hooks/useRoutes";
 import UserAvatar from "./UserAvatar";
 import { useSession } from "next-auth/react";
+import ThemeToggler from "../ThemeToggler";
 
 const SidebarList = () => {
   const { data: session } = useSession();
@@ -13,19 +14,23 @@ const SidebarList = () => {
   return (
     <nav className="h-full flex flex-col justify-between items-center">
       <ul className="flex flex-col gap-2">
+        <li>
+
+          <ThemeToggler />
+        </li>
         {routes.map(({ href, icon: Icon, label, active, onClick }) => (
           <li
             key={href}
             className={`${
               active ? "bg-accent hover:text-inherit" : null
-            } rounded-lg max-w-max hover:text-accent transition-colors last:hover:text-danger-hover las`}
+            } rounded-lg max-w-max hover:text-accent transition-colors last:hover:text-danger-hover`}
             title={label}
           >
             <span className="hidden">{label}</span>
             <Link
               href={href}
               onClick={onClick}
-              className="h-full w-full block p-1"
+              className="h-full w-full flex  p-1"
             >
               <Icon />
             </Link>
