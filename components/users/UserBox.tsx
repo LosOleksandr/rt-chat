@@ -16,7 +16,7 @@ const UserBox = ({ name, image }: TUserBox) => {
         <UserAvatar
           src={image || ""}
           alt={name || ""}
-          className="group-hover:scale-105 transition-all"
+          className="group-hover:scale-105 transition-transform"
         />
         {name}
       </Link>
