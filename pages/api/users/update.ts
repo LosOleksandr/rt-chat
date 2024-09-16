@@ -44,12 +44,8 @@ export default async function PUT(
         phone,
         description,
       },
-      select: {
-        name: true,
-        email: true,
-        image: true,
-        phone: true,
-        description: true,
+      omit: {
+        password: true,
       },
     });
 

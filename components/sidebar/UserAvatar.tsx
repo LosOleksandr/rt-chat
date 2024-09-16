@@ -7,7 +7,7 @@ import getInitials from "@/lib/getInitials";
 import { IconPhotoPlus } from "@tabler/icons-react";
 import FileInput from "../ui/file-input";
 
-const avatarVariants = cva("mx-auto overflow-visible border-2 border-accent", {
+const avatarVariants = cva("overflow-visible border-2 border-accent", {
   variants: {
     size: {
       icon: "w-5 h-5 text-xs bg-transparent",
@@ -47,7 +47,7 @@ const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
         )}
         {...props}
       >
-        <AvatarImage className="rounded-full" src={src || ""} alt={alt || ""} />
+        <AvatarImage className="rounded-full" src={src} alt={alt || ""} />
         <AvatarFallback>{initials}</AvatarFallback>
         {withFileInput ? (
           <FileInput asChild>

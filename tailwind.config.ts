@@ -96,6 +96,7 @@ const config = {
             marginLeft: "0rem",
           },
         },
+        
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
