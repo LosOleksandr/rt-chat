@@ -15,7 +15,7 @@ const UsersPage: NextPageWithLayout<
     <>
       <section className="p-4 bg-background-secondary">
         <h2 className="text-xl font-bold">People</h2>
-        <UserList users={users} />{" "}
+        <UserList users={users} />
       </section>
       <div className="container">
         <section>Hi, {user_session?.name}</section>
@@ -36,7 +36,6 @@ export const getServerSideProps = (async (context) => {
   }
 
   const users = await getUsers(session.user.email || "");
-  console.log("session in ServerSide: ", session);
   return {
     props: {
       user_session: session.user,
