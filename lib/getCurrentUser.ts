@@ -1,16 +1,21 @@
-import { User } from "@prisma/client";
 import prisma from "./prisma";
 
-export const getCurrentUser = async (id: string): Promise<User | null> => {
+export const getCurrentUser = async (id: string) => {
   try {
-    const currentUser = await prisma.user.findUnique({ where: { id } });
+    const currentUser = await prisma.user.findUnique({
+      omit: {
+        password: true,
+      },
+      where: { id },
+    });
 
     if (!currentUser) {
       return null;
     }
-    return JSON.parse(JSON.stringify(currentUser));
+
+    return currentUser;
   } catch (error) {
-    console.error("Error in getUser:", error);
+    console.error("Error in getCurrentUser:", error);
     return null;
   }
 };
