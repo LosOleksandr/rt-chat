@@ -1,12 +1,30 @@
+import { getServerSession } from "next-auth";
 import prisma from "./prisma";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 
-export const getCurrentUser = async (id: string) => {
+type TGetCurrentUser = {
+  req: GetServerSidePropsContext["req"] | NextApiRequest;
+  res: GetServerSidePropsContext["res"] | NextApiResponse;
+};
+
+export const getCurrentUser = async ({ req, res }: TGetCurrentUser) => {
   try {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session?.user) {
+      return null;
+    }
+
     const currentUser = await prisma.user.findUnique({
       omit: {
         password: true,
       },
-      where: { id },
+      where: { id: session.user.id },
     });
 
     if (!currentUser) {

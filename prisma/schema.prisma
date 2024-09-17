@@ -67,9 +67,9 @@ model User {
 
 model Conversation {
   id             String   @id @default(cuid())
-  name           String
+  name           String?
   lastMessagesAt DateTime @default(now())
-  isGroup        Boolean
+  isGroup        Boolean?
 
   messages Message[]
   users    ConversationOnUser[]
