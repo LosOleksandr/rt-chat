@@ -36,6 +36,7 @@ export const getServerSideProps = (async (context) => {
   }
 
   const users = await getUsers(session.user.email || "");
+  
   return {
     props: {
       user_session: session.user,

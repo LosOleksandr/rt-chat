@@ -7,9 +7,7 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { NextPageWithLayout } from "@/pages/_app";
 import { IconEdit } from "@tabler/icons-react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
 import React, { ReactElement, useState } from "react";
-import { authOptions } from "../api/auth/[...nextauth]";
 import { User } from "@prisma/client";
 
 const AccountPage: NextPageWithLayout<
@@ -56,16 +54,10 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps = (async (context) => {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  if (!session?.user) {
-    return { redirect: { destination: "/auth/login", permanent: false } };
-  }
-
-  const user = await getCurrentUser(context.params?.account_id as string);
+  const user = await getCurrentUser(context);
 
   if (!user) {
-    return { notFound: true };
+    return { redirect: { destination: "/auth/login", permanent: false } };
   }
 
   return { props: { user: JSON.parse(JSON.stringify(user)) } };
