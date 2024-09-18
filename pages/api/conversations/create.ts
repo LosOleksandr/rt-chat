@@ -61,18 +61,19 @@ export default async function POST(
       });
     }
 
-    const existingConversations = await prisma.conversationOnUser.findMany({
+    const existingConversations = await prisma.conversation.findMany({
       where: {
-        userId: userId,
-      },
-      include: {
-        conversation: true,
+        users: {
+          some: {
+            userId: userId,
+          },
+        },
       },
     });
 
     if (existingConversations.length > 0) {
       return res.status(200).send({
-        conversation: existingConversations[0].conversation,
+        conversation: existingConversations[0],
         message: "Existing conversation returned",
       });
     }

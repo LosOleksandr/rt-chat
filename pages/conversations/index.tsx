@@ -1,13 +1,17 @@
 import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "../_app";
-import UsersLayout from "@/components/UsersLayout";
+import ConversationsLayout from "@/components/conversations/layout";
 
-const Conversations: NextPageWithLayout = () => {
-  return <div className="container">conversation</div>;
+const ConversationsPage: NextPageWithLayout = () => {
+  return (
+    <>
+      <section>Conversation</section>
+    </>
+  );
 };
 
-Conversations.getLayout = function getLayout(page: ReactElement) {
-  return <UsersLayout>{page}</UsersLayout>;
+ConversationsPage.getLayout = function getLayout(page: ReactElement) {
+  return <ConversationsLayout>{page}</ConversationsLayout>;
 };
 
-export default Conversations;
+export default ConversationsPage;

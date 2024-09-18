@@ -1,4 +1,3 @@
-import UsersLayout from "@/components/UsersLayout";
 import AccountForm from "@/components/account/AccountForm";
 import AccountInfo from "@/components/account/AccountInfo";
 import UserAvatar from "@/components/sidebar/UserAvatar";
@@ -9,6 +8,7 @@ import { IconEdit } from "@tabler/icons-react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { ReactElement, useState } from "react";
 import { User } from "@prisma/client";
+import UsersLayout from "@/components/users/layout";
 
 const AccountPage: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
