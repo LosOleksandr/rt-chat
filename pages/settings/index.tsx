@@ -1,13 +1,13 @@
 import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "../_app";
-import UsersLayout from "@/components/UsersLayout";
+import GlobalLayout from "@/components/GlobalLayout";
 
 const Conversations: NextPageWithLayout = () => {
   return <div className="container">settings</div>;
 };
 
 Conversations.getLayout = function getLayout(page: ReactElement) {
-  return <UsersLayout>{page}</UsersLayout>;
+  return <GlobalLayout>{page}</GlobalLayout>;
 };
 
 export default Conversations;
