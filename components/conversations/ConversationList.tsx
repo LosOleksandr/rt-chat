@@ -12,7 +12,7 @@ const ConversationList = () => {
   const fetchConversations = useCallback(() => {
     setIsLoading(true);
     instance
-      .get("/conversations/get")
+      .get("/api/conversations/get")
       .then(({ data }) => setConversations(data))
       .finally(() => setIsLoading(false));
   }, []);
