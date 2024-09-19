@@ -10,7 +10,7 @@ const UsersList = () => {
   const fetchUsers = useCallback(() => {
     setLoading(true);
     instance
-      .get("/users/get")
+      .get("/api/users/get")
       .then(({ data: users }) => setUsers(users))
       .finally(() => setLoading(false));
   }, []);

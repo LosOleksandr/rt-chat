@@ -31,7 +31,7 @@ const UserBox = ({ name, image, id }: TUserBox) => {
       .post<
         TAxiosConversationRequest,
         AxiosResponse<TAxiosConversationResponse>
-      >("/conversations/create", {
+      >("/api/conversations/create", {
         userId: id,
       })
       .then(({ data }) => {
