@@ -1,18 +1,9 @@
 import { getServerSession } from "next-auth";
 import prisma from "./prisma";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
+import { TServerSessionContext } from "@/types/auth";
 
-type TGetCurrentUser = {
-  req: GetServerSidePropsContext["req"] | NextApiRequest;
-  res: GetServerSidePropsContext["res"] | NextApiResponse;
-};
-
-export const getCurrentUser = async ({ req, res }: TGetCurrentUser) => {
+export const getCurrentUser = async ({ req, res }: TServerSessionContext) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 

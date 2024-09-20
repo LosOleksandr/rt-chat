@@ -1,12 +1,13 @@
-import { getCurrentUser } from "@/lib/getCurrentUser";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const currentUser = await getCurrentUser({ res, req });
+    const session = await getServerSession(req, res, authOptions);
 
-    if (!currentUser) {
+    if (!session?.user) {
       return res.status(401).send("Not Authorized");
     }
 
@@ -14,7 +15,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       where: {
         users: {
           some: {
-            userId: currentUser.id,
+            userId: session.user.id,
           },
         },
       },

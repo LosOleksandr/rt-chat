@@ -5,7 +5,7 @@ import ConversationList from "../ConversationList";
 const ConversationsLayout = ({ children }: { children: ReactNode }) => {
   return (
     <GlobalLayout>
-      <section className="p-4 bg-background-secondary">
+      <section className="p-4 bg-background-secondary border-r border-border">
         <h2 className="text-xl font-bold">Chats</h2>
         <ConversationList />
       </section>

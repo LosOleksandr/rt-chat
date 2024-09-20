@@ -56,6 +56,10 @@ const config = {
           DEFAULT: "hsl(var(--border))",
           foreground: "hsl(var(--border-foreground))",
         },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
       },
       keyframes: {
         "accordion-down": {
@@ -96,7 +100,6 @@ const config = {
             marginLeft: "0rem",
           },
         },
-        
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
