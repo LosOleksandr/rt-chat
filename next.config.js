@@ -2,12 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   async headers() {
+    const origin = process.env.ORIGIN;
     return [
       {
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Origin", value: origin },
           {
             key: "Access-Control-Allow-Methods",
             value: "GET,OPTIONS,PATCH,DELETE,POST,PUT",
