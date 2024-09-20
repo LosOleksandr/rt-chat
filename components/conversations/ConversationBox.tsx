@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import UserAvatar from "../sidebar/UserAvatar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import formatMessageDate from "@/lib/formatMessageDate";
+import formatMessageDate from "@/lib/utils/formatMessageDate";
 
 type TConversationBox = TFullConversation & {
   active?: boolean;

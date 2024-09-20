@@ -1,3 +1,9 @@
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
+
 export type TSignupCreds = {
   name: string;
   email: string;
@@ -10,3 +16,7 @@ export enum AuthActions {
   LOGIN = "login",
 }
 
+export type TServerSessionContext = {
+  req: GetServerSidePropsContext["req"] | NextApiRequest;
+  res: GetServerSidePropsContext["res"] | NextApiResponse;
+};

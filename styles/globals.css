@@ -27,6 +27,9 @@
 
     --border: 212.7, 26.8%, 83.9%;
     --border-foreground: 0, 0%, 63.9%;
+
+    --muted: 0, 0%, 50%;
+    --muted-foreground: 0, 0%, 80%;
   }
   :root[class~="dark"] {
     --background: 0, 0%, 14.9%;
@@ -51,6 +54,9 @@
 
     --border: 0, 0%, 63.9%;
     --border-foreground: 212.7, 26.8%, 83.9%;
+
+    --muted: 0, 0%, 80%;
+    --muted-foreground: 0, 0%, 50%;
   }
 
   body {

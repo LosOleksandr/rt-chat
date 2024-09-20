@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { AvatarProps } from "@radix-ui/react-avatar";
-import getInitials from "@/lib/getInitials";
+import getInitials from "@/lib/utils/getInitials";
 import { IconPhotoPlus } from "@tabler/icons-react";
 import FileInput from "../ui/file-input";
 
