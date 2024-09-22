@@ -1,24 +1,48 @@
 import { TSignupCreds } from "@/types/auth";
 import { ErrorMessage } from "@hookform/error-message";
-import React, { FC, SyntheticEvent, forwardRef, useState } from "react";
+import React, {
+  FC,
+  InputHTMLAttributes,
+  SyntheticEvent,
+  forwardRef,
+  useState,
+} from "react";
 import { FieldErrors } from "react-hook-form";
 import { Button } from "./button";
 import { IconEye, IconEyeClosed } from "@tabler/icons-react";
 import { Textarea } from "./textarea";
+import { cva, VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-type TInput = React.InputHTMLAttributes<
-  HTMLInputElement | HTMLTextAreaElement
-> & {
-  as: "input" | "textarea";
-  onChange?: (e: SyntheticEvent) => void;
-  onBlur?: (e: SyntheticEvent) => void;
-  label?: string;
-  errors?: FieldErrors;
-};
+const inputVariants = cva(
+  "block w-full transition-colors bg-transparent dark:bg-transparent p-1 mt-1 outline-none rounded-md border-2 border-border resize-none",
+  {
+    variants: {
+      variant: {
+        input:
+          "bg-transparent dark:bg-transparent focus:border-accent min-h-max",
+        textarea: "min-h-[80px]",
+      },
+    },
+    defaultVariants: {
+      variant: "input",
+    },
+  }
+);
+
+type TInput = InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> &
+  VariantProps<typeof inputVariants> & {
+    as: "input" | "textarea";
+    onChange?: (e: SyntheticEvent) => void;
+    onBlur?: (e: SyntheticEvent) => void;
+    label?: string;
+    errors?: FieldErrors;
+    className?: string;
+  };
 
 export const Input: FC<TInput> = forwardRef(
   (
-    { as, onBlur, onChange, label, errors, ...props },
+    { as, onBlur, onChange, label, errors, className, variant, ...props },
     ref: React.Ref<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -36,11 +60,14 @@ export const Input: FC<TInput> = forwardRef(
           {as === "input" && (
             <>
               <input
-                className={`block w-full bg-transparent border-2 border-border focus:border-accent outline-none rounded-md p-1 mt-1 transition-colors ${
-                  errors?.[props.name as keyof TSignupCreds] || errors?.root
-                    ? "border-danger focus:border-red-600 animate-shaking"
-                    : ""
-                }`}
+                className={cn(
+                  inputVariants({ variant, className }),
+                  `${
+                    errors?.[props.name as keyof TSignupCreds] || errors?.root
+                      ? "border-danger focus:border-red-600 animate-shaking"
+                      : null
+                  }`
+                )}
                 onBlur={onBlur}
                 onChange={onChange}
                 ref={ref as React.Ref<HTMLInputElement>}
@@ -51,8 +78,12 @@ export const Input: FC<TInput> = forwardRef(
                 <Button
                   tabIndex={-1}
                   type="button"
-                  className="absolute top-0 right-0"
-                  variant={"ghost"}
+                  className={`absolute top-0 right-0`}
+                  variant={
+                    errors?.[props.name as keyof TSignupCreds] || errors?.root
+                      ? "ghost-destructive"
+                      : "ghost"
+                  }
                   onClick={() => {
                     setShowPassword(!showPassword);
                   }}
@@ -68,13 +99,16 @@ export const Input: FC<TInput> = forwardRef(
           )}
           {as === "textarea" && (
             <Textarea
-              //@ts-expect-error not-inculded-property
+              //@ts-expect-error not-included-property
               style={{ fieldSizing: "content" }}
-              className={`block w-full bg-transparent dark:bg-transparent border-2 border-border focus:border-accent outline-none rounded-md p-1 mt-1 transition-colors resize-none ${
-                errors?.[props.name as keyof TSignupCreds] || errors?.root
-                  ? "border-danger focus:border-red-600 animate-shaking"
-                  : ""
-              }`}
+              className={cn(
+                inputVariants({ variant, className }),
+                `${
+                  errors?.[props.name as keyof TSignupCreds] || errors?.root
+                    ? "border-danger focus:border-red-600 animate-shaking"
+                    : null
+                }`
+              )}
               onBlur={onBlur}
               onChange={onChange}
               ref={ref as React.Ref<HTMLTextAreaElement>}
@@ -82,12 +116,14 @@ export const Input: FC<TInput> = forwardRef(
             />
           )}
         </div>
-        <ErrorMessage
-          as={"small"}
-          className="text-danger block mt-2"
-          name={props.name || ""}
-          errors={errors}
-        />
+        {errors && (
+          <ErrorMessage
+            as={"small"}
+            className="text-danger block mt-2"
+            name={props.name || ""}
+            errors={errors}
+          />
+        )}
       </label>
     );
   }

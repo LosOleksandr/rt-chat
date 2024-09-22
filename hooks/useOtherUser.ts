@@ -5,17 +5,21 @@ import { useMemo } from "react";
 const useOtherUser = (users: TFullConversationOnUser[]) => {
   const { data: session } = useSession();
 
-  const otheUser = useMemo(() => {
+  const otherUser = useMemo(() => {
     const currentUserEmail = session?.user.email;
 
     const otherUser = users.filter(
       ({ user }) => user.email !== currentUserEmail
     );
 
-    return otherUser;
+    if (otherUser.length === 0) {
+      return null;
+    }
+
+    return otherUser[0].user;
   }, [session?.user.email, users]);
 
-  return otheUser[0].user;
+  return otherUser;
 };
 
 export default useOtherUser;
