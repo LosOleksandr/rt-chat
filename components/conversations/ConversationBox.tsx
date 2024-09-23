@@ -49,7 +49,7 @@ const ConversationBox = ({
 
   const lastMessageBody = useMemo(() => {
     if (lastMessage?.image) {
-      return `${otherUser.name} sent an image`;
+      return `${otherUser?.name} sent an image`;
     }
 
     if (lastMessage?.body) {
@@ -57,7 +57,7 @@ const ConversationBox = ({
     }
 
     return "Started a conversation";
-  }, [lastMessage?.body, lastMessage?.image, otherUser.name]);
+  }, [lastMessage?.body, lastMessage?.image, otherUser?.name]);
 
   return (
     <li
@@ -72,11 +72,11 @@ const ConversationBox = ({
         <div className="flex gap-2 items-center">
           <UserAvatar
             className="group-hover:scale-105 transition-transform"
-            src={otherUser.image || ""}
-            alt={otherUser.name || ""}
+            src={otherUser?.image || ""}
+            alt={otherUser?.name || "Deleted Account"}
           />
           <div>
-            <p>{name || otherUser.name}</p>
+            <p>{name || otherUser?.name || "Deleted Account"}</p>
             <p className="text-sm relative">
               {lastMessageBody}
               {hasSeen && (

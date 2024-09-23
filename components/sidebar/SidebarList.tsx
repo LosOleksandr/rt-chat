@@ -44,8 +44,8 @@ const SidebarList = () => {
           <UserAvatar
             className="group-hover:scale-105"
             size={"md"}
-            src={session?.user.image || ""}
-            alt={session?.user.name || ""}
+            src={session?.user.image}
+            alt={session?.user.name}
             isOnline={true}
           />
           Me

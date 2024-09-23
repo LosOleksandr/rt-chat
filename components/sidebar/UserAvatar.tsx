@@ -24,8 +24,8 @@ const avatarVariants = cva("overflow-visible border-2 border-accent", {
 });
 
 type TUserAvatar = {
-  src?: string;
-  alt: string;
+  src?: string | null;
+  alt?: string | null;
   withFileInput?: boolean;
   isOnline?: boolean;
 } & Omit<AvatarProps & RefAttributes<HTMLSpanElement>, "ref"> &
@@ -33,7 +33,7 @@ type TUserAvatar = {
 
 const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
   ({ className, src, alt, size, withFileInput, isOnline, ...props }, ref) => {
-    const initials = getInitials(alt);
+    const initials = getInitials(alt || "");
     return (
       <Avatar
         ref={ref}
@@ -47,10 +47,10 @@ const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
         )}
         {...props}
       >
-        <AvatarImage className="rounded-full" src={src} alt={alt || ""} />
+        <AvatarImage className="rounded-full" src={src || ""} alt={alt || ""} />
         <AvatarFallback>{initials}</AvatarFallback>
         {withFileInput ? (
-          <FileInput asChild>
+          <FileInput variant={"fixed_bottom_right"} asChild>
             <IconPhotoPlus />{" "}
           </FileInput>
         ) : null}

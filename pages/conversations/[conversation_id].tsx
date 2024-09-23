@@ -53,6 +53,10 @@ export const getServerSideProps: GetServerSideProps<TConversationPage> = async (
   const conversation = await getConversationById(conversationId);
   const messages = await getMessagesByConversationId(conversationId);
 
+  if (!conversation || !messages) {
+    return { redirect: { destination: "/conversations", permanent: false } };
+  }
+
   return {
     props: {
       conversation: JSON.parse(JSON.stringify(conversation)),

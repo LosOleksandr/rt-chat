@@ -48,7 +48,6 @@ const AuthForm = ({ providers, action }: TAuthForm) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const params = useSearchParams();
-
   const socialError = params.get("error");
 
   const onSumbit = async (data: TSignupCreds) => {

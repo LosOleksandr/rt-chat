@@ -10,3 +10,4 @@ export default withAuth({
 export const config = {
   matcher: ["/(users|conversations|account|settings)/:path*"],
 };
+  

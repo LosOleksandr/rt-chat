@@ -49,7 +49,7 @@ const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={`${"border-2 border-accent rounded-xl"} py-4 px-11 flex flex-col gap-4 w-full relative`}
+        className={`border-2 border-accent rounded-xl py-4 px-11 flex flex-col gap-4 w-full relative`}
       >
         <>
           <Input

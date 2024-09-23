@@ -6,6 +6,7 @@ import { TFullConversation } from "@/types/api";
 
 const ConversationList = () => {
   const [conversations, setConversations] = useState<TFullConversation[]>([]);
+  console.log('conversations: ', conversations);
   const [isLoading, setIsLoading] = useState(false);
   const { conversationId } = useConversations();
 

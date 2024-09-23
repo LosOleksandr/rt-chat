@@ -20,9 +20,12 @@ const ConversationHeader = ({
 
   return (
     <header className="border-b border-border flex items-end gap-2 p-2 bg-background-secondary">
-      <UserAvatar src={otherUser.image || ""} alt={otherUser.name || ""} />
+      <UserAvatar
+        src={otherUser?.image || ""}
+        alt={otherUser?.name || "Deleted Account"}
+      />
       <div className="flex flex-col justify-end">
-        <p>{otherUser.name}</p>
+        <p>{otherUser?.name || "Deleted Account"}</p>
         <small className="text-muted">{statusText}</small>
       </div>
     </header>
