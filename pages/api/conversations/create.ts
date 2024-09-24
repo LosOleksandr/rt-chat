@@ -63,11 +63,26 @@ export default async function POST(
 
     const existingConversations = await prisma.conversation.findMany({
       where: {
-        users: {
-          some: {
-            userId: userId,
+        AND: [
+          {
+            users: {
+              some: {
+                user: {
+                  id: userId,
+                },
+              },
+            },
           },
-        },
+          {
+            users: {
+              some: {
+                user: {
+                  id: currentUser.id,
+                },
+              },
+            },
+          },
+        ],
       },
     });
 
@@ -77,6 +92,7 @@ export default async function POST(
         message: "Existing conversation returned",
       });
     }
+
     const newConversation = await prisma.conversation.create({
       data: {
         users: {
