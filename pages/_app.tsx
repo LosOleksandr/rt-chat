@@ -7,6 +7,7 @@ import { Ubuntu } from "next/font/google";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
 import { ThemeProvider } from "@/components/theme-context";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 const ubuntu = Ubuntu({ weight: ["400", "500", "700"], subsets: ["latin"] });
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
@@ -53,6 +54,7 @@ export default function App({
           disableTransitionOnChange
         >
           {getLayout(<Component {...pageProps} />)}
+          <SpeedInsights />
         </ThemeProvider>
         <Toaster />
       </SessionProvider>
