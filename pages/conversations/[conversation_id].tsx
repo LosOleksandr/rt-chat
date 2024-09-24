@@ -2,13 +2,12 @@ import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "../_app";
 import ConversationsLayout from "@/components/conversations/layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 import getConversationById from "@/lib/getConversationById";
 import { TFullConversation } from "@/types/api";
 import ConversationHeader from "@/components/conversation/ConversationHeader";
 import ConversationBody from "@/components/conversation/ConversationBody";
 import ConversationForm from "@/components/conversation/ConversationForm";
+import getSession from "@/lib/getSession";
 
 type TConversationPage = {
   conversation: TFullConversation;
@@ -17,7 +16,6 @@ type TConversationPage = {
 const Conversation: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ conversation }) => {
-  console.log("messages: ", conversation.messages);
   return (
     <>
       <section className="grid grid-rows-[fit-content(10%)_1fr_fit-content(10%)]">
@@ -36,7 +34,7 @@ Conversation.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps: GetServerSideProps<TConversationPage> = async (
   context
 ) => {
-  const session = await getServerSession(context.req, context.res, authOptions);
+  const session = await getSession(context);
 
   if (!session?.user) {
     return { redirect: { destination: "/auth/login", permanent: false } };
@@ -49,10 +47,6 @@ export const getServerSideProps: GetServerSideProps<TConversationPage> = async (
   }
 
   const conversation = await getConversationById(conversationId, 25);
-
-  if (!conversation) {
-    return { redirect: { destination: "/conversations", permanent: false } };
-  }
 
   return {
     props: {

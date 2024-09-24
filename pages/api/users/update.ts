@@ -1,6 +1,6 @@
+import getSession from "@/lib/getSession";
 import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
 
 type TApiUserUpdate =
   | {
@@ -22,9 +22,9 @@ export default async function PUT(
   res: NextApiResponse<TApiUserUpdate>
 ) {
   try {
-    const token = await getToken({ req });
+    const session = await getSession({ req, res });
 
-    if (!token) {
+    if (!session?.user) {
       res.status(401).send({ error: "Not authorized" });
     }
 

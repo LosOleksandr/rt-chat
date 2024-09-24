@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getCurrentUser } from "@/lib/getCurrentUser";
 import prisma from "@/lib/prisma";
 import { Conversation } from "@prisma/client";
+import getSession from "@/lib/getSession";
 
 type TCreateConversationBody = {
   userId: string;
@@ -18,9 +18,9 @@ export default async function POST(
     const { userId, isGroup, members, name }: TCreateConversationBody =
       req.body;
 
-    const currentUser = await getCurrentUser({ req, res });
+    const session = await getSession({ req, res });
 
-    if (!currentUser) {
+    if (!session?.user) {
       return res.status(401).send("Not Authorized");
     }
 
@@ -44,7 +44,7 @@ export default async function POST(
               })),
               {
                 user: {
-                  connect: { id: currentUser.id },
+                  connect: { id: session.user.id },
                 },
               },
             ],
@@ -77,7 +77,7 @@ export default async function POST(
             users: {
               some: {
                 user: {
-                  id: currentUser.id,
+                  id: session.user.id,
                 },
               },
             },
@@ -99,7 +99,7 @@ export default async function POST(
           create: [
             {
               user: {
-                connect: { id: currentUser.id },
+                connect: { id: session.user.id },
               },
             },
             {

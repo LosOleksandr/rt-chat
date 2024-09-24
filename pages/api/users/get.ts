@@ -1,17 +1,17 @@
-import { getCurrentUser } from "@/lib/getCurrentUser";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
+import getSession from "@/lib/getSession";
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const currentUser = await getCurrentUser({ req, res });
+    const session = await getSession({ req, res });
 
-    if (!currentUser) {
+    if (!session?.user) {
       return res.status(401).send("Not Authorized");
     }
 
     const users = await prisma.user.findMany({
-      where: { NOT: { email: currentUser.email } },
+      where: { NOT: { email: session.user.email } },
       orderBy: { createdAt: "desc" },
       omit: {
         password: true,
