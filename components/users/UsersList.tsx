@@ -1,10 +1,10 @@
-import { User } from "@prisma/client";
 import React, { useCallback, useEffect, useState } from "react";
 import UserBox from "./UserBox";
 import instance from "@/lib/instance";
+import { TUsersWithConversationExists } from "@/types/api";
 
 const UsersList = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<TUsersWithConversationExists[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchUsers = useCallback(() => {
