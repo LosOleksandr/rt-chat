@@ -1,9 +1,8 @@
 import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "../_app";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 import UsersLayout from "@/components/users/layout";
+import getSession from "@/lib/getSession";
 
 const UsersPage: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -21,8 +20,8 @@ UsersPage.getLayout = function getLayout(page: ReactElement) {
   return <UsersLayout>{page}</UsersLayout>;
 };
 
-export const getServerSideProps = (async (context) => {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
 
   if (!session?.user) {
     return { redirect: { destination: "/auth/login", permanent: false } };
@@ -31,8 +30,8 @@ export const getServerSideProps = (async (context) => {
   return {
     props: {
       user_session: session.user,
-    },
+    },  
   };
-}) satisfies GetServerSideProps;
+};
 
 export default UsersPage;

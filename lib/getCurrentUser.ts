@@ -1,11 +1,10 @@
-import { getServerSession } from "next-auth";
 import prisma from "./prisma";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { TServerSessionContext } from "@/types/auth";
+import getSession from "./getSession";
 
 export const getCurrentUser = async ({ req, res }: TServerSessionContext) => {
   try {
-    const session = await getServerSession(req, res, authOptions);
+    const session = await getSession({ req, res });
 
     if (!session?.user) {
       return null;

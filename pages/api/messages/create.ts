@@ -1,6 +1,6 @@
-import { getCurrentUser } from "@/lib/getCurrentUser";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
+import getSession from "@/lib/getSession";
 
 type TCreateMessageBody = {
   message: string;
@@ -10,9 +10,9 @@ type TCreateMessageBody = {
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const currentUser = await getCurrentUser({ req, res });
+    const session = await getSession({ req, res });
 
-    if (!currentUser?.email) {
+    if (!session?.user) {
       return res.status(401).send("Not Authtorized");
     }
 
