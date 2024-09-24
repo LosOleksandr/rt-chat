@@ -18,11 +18,40 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    if (!users) {
-      return res.status(404).send("Users not found");
-    }
+    const userConversations = await Promise.all(
+      users.map(async (user) => {
+        const conversation = await prisma.conversation.findMany({
+          where: {
+            AND: [
+              {
+                users: {
+                  some: {
+                    user: {
+                      id: user.id,
+                    },
+                  },
+                },
+              },
+              {
+                users: {
+                  some: {
+                    user: {
+                      id: session.user.id,
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          select: {
+            id: true,
+          },
+        });
+        return { ...user, conversationExists: conversation[0]?.id };
+      })
+    );
 
-    return res.status(200).send(users);
+    return res.status(200).send(userConversations);
   } catch (error) {
     return res.status(500).send("Internal error");
   }

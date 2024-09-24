@@ -18,3 +18,7 @@ export type TFullConversation = Conversation & {
 export type TFullConversationOnUser = ConversationOnUser & {
   user: User;
 };
+
+export type TUsersWithConversationExists = User & {
+  conversationExists: string;
+};
