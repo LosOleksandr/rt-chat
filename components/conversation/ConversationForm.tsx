@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import FileInput from "../ui/file-input";
 import { IconPhotoPlus, IconSend2 } from "@tabler/icons-react";
 import { Button } from "../ui/button";
+import instance from "@/lib/instance";
+import useConversations from "@/hooks/useConversations";
 
 type TConversationFormData = {
   messageField: string;
@@ -14,10 +16,26 @@ const ConversationForm = () => {
     handleSubmit,
     register,
     formState: { errors },
+    reset,
+    watch,
   } = useForm<TConversationFormData>();
 
+  const { conversationId } = useConversations();
+
+  const isEmpty = !!watch().messageField;
+
   const onSubmit = async (data: TConversationFormData) => {
-    console.log(data);
+    try {
+      instance
+        .post("/api/messages/create", {
+          conversationId,
+          message: data.messageField,
+        })
+        .then(({ data }) => console.log(data))
+        .finally(() => {
+          reset();
+        });
+    } catch (error) {}
   };
 
   return (
@@ -46,9 +64,12 @@ const ConversationForm = () => {
             maxLength={450}
           />
         </div>
+
         <Button
           type="submit"
-          className="rounded-full p-0 h-12 w-12"
+          className={`rounded-full p-0 h-12 w-12 -translate-x-1/2 opacity-0 transition-all ${
+            isEmpty ? "opacity-100 translate-x-0 pointer-events-none" : null
+          }`}
           title="Send Message"
         >
           <IconSend2 className="w-5 h-5" />
