@@ -1,20 +1,53 @@
 import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "../_app";
 import ConversationsLayout from "@/components/conversations/layout";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetServerSidePropsType,
+} from "next";
 import getConversationById from "@/lib/getConversationById";
-import { TFullConversation } from "@/types/api";
-import ConversationHeader from "@/components/conversation/ConversationHeader";
 import ConversationBody from "@/components/conversation/ConversationBody";
 import ConversationForm from "@/components/conversation/ConversationForm";
-import getSession from "@/lib/getSession";
+import prisma from "@/lib/prisma";
+import ConversationHeader from "@/components/conversation/ConversationHeader";
+import { TFullConversation } from "@/types/api";
 
-type TConversationPage = {
-  conversation: TFullConversation;
+export const getStaticPaths: GetStaticPaths = async () => {
+  const conversations = await prisma.conversation.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  const paths = conversations.map((conversation) => ({
+    params: {
+      conversation_id: conversation.id,
+    },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
 };
 
-const Conversation: NextPageWithLayout<
-  InferGetServerSidePropsType<typeof getServerSideProps>
+export const getStaticProps: GetStaticProps<{
+  conversation: TFullConversation;
+}> = async ({ params }) => {
+  const conversationId = params?.conversation_id as string;
+
+  const conversation = await getConversationById(conversationId, 25);
+
+  return {
+    props: {
+      conversation: JSON.parse(JSON.stringify(conversation)),
+    },
+  };
+};
+
+const Page: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getStaticProps>
 > = ({ conversation }) => {
   return (
     <>
@@ -27,32 +60,8 @@ const Conversation: NextPageWithLayout<
   );
 };
 
-Conversation.getLayout = function getLayout(page: ReactElement) {
+Page.getLayout = function getLayout(page: ReactElement) {
   return <ConversationsLayout>{page}</ConversationsLayout>;
 };
 
-export const getServerSideProps: GetServerSideProps<TConversationPage> = async (
-  context
-) => {
-  const session = await getSession(context);
-
-  if (!session?.user) {
-    return { redirect: { destination: "/auth/login", permanent: false } };
-  }
-
-  const conversationId = context.params?.conversation_id as string;
-
-  if (!conversationId) {
-    return { redirect: { destination: "/conversations", permanent: false } };
-  }
-
-  const conversation = await getConversationById(conversationId, 25);
-
-  return {
-    props: {
-      conversation: JSON.parse(JSON.stringify(conversation)),
-    },
-  };
-};
-
-export default Conversation;
+export default Page;

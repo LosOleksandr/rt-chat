@@ -1,29 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import UserBox from "./UserBox";
-import instance from "@/lib/instance";
 import { TUsersWithConversationExists } from "@/types/api";
+import useSWR, { SWRResponse } from "swr";
+import fetcher from "@/lib/fetcher";
 
 const UsersList = () => {
-  const [users, setUsers] = useState<TUsersWithConversationExists[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchUsers = useCallback(() => {
-    setLoading(true);
-    instance
-      .get("/api/users/get")
-      .then(({ data: users }) => setUsers(users))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
-
-  if (loading) return <Loading />;
+  const {
+    data: users,
+    isLoading,
+  }: SWRResponse<TUsersWithConversationExists[]> = useSWR(
+    "/api/users/get",
+    fetcher
+  );
+  
+  if (isLoading) return <Loading />;
 
   return (
     <ul className="flex flex-col gap-1 mt-4 overflow-auto">
-      {users.length > 0 &&
+      {users &&
         users.map(({ id, ...props }) => {
           return <UserBox key={id} id={id} {...props} />;
         })}

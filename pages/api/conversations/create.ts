@@ -87,7 +87,10 @@ export default async function POST(
     });
 
     if (existingConversations.length > 0) {
-      return res.status(400).send("Conversation is already existed");
+      return res.status(200).send({
+        conversation: existingConversations[0],
+        message: "Existing conversation returned",
+      });
     }
 
     const newConversation = await prisma.conversation.create({
