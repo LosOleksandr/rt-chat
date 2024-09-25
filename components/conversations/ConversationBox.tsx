@@ -62,12 +62,12 @@ const ConversationBox = ({
   return (
     <li
       className={`${
-        active ? "bg-accent" : null
-      } group hover:bg-slate-100/90 dark:hover:bg-neutral-500/90 p-2 border-b border-border hover:border-transparent transition-colors`}
+        active ? "bg-slate-100/90 dark:bg-neutral-500/90" : null
+      } group hover:bg-slate-100/90 dark:hover:bg-neutral-500/90 rounded-md transition-colors`}
     >
       <Link
         href={conversationsHref}
-        className="flex items-center justify-between gap-4"
+        className="flex items-center justify-between gap-4 p-2 "
       >
         <div className="flex gap-2 items-center">
           <UserAvatar
@@ -85,7 +85,7 @@ const ConversationBox = ({
             </p>
           </div>
         </div>
-        <p className="text-xs text-">
+        <p className="text-xs">
           {formatMessageDate(
             new Date(
               lastMessage?.createdAt ? lastMessage?.createdAt : createdAt

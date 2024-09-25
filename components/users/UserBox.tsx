@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import instance from "@/lib/instance";
 import { AxiosResponse } from "axios";
 import { TUsersWithConversationExists } from "@/types/api";
+import { LoadingSpinner } from "../ui/spinner";
+import useConversations from "@/hooks/useConversations";
 
 type TAxiosConversationRequest = {
   userId: string;
@@ -18,60 +20,58 @@ type TAxiosConversationResponse =
     }
   | string;
 
-const UserBox = ({
-  name,
-  image,
-  id,
-  conversationExists,
-}: TUsersWithConversationExists) => {
+const UserBox = ({ name, image, id }: TUsersWithConversationExists) => {
   const router = useRouter();
-
+  const { conversationId } = useConversations();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = useCallback(() => {
     setIsLoading(true);
 
-    if (conversationExists) {
-      router.push(`/conversations/${conversationExists}`);
-    } else {
-      instance
-        .post<
-          TAxiosConversationRequest,
-          AxiosResponse<TAxiosConversationResponse>
-        >("/api/conversations/create", {
-          userId: id,
-        })
-        .then(({ data }) => {
-          if (typeof data !== "string" && data.conversation) {
-            router.push(`/conversations/${data.conversation.id}`);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        })
-        .finally(() => setIsLoading(false));
-    }
-  }, [id, router, conversationExists]);
+    instance
+      .post<
+        TAxiosConversationRequest,
+        AxiosResponse<TAxiosConversationResponse>
+      >("/api/conversations/create", {
+        userId: id,
+      })
+      .then(({ data }) => {
+        if (typeof data !== "string" && data.conversation) {
+          router.push(`/conversations/${data.conversation.id}`);
+        }
+      })
+      .catch((err) => {
+        console.error("Error", err);
+        setIsLoading(false);
+      });
+
+    setIsLoading(!conversationId);
+  }, [id, router, , conversationId]);
 
   return (
     <>
-      {isLoading ? null : (
-        <li>
-          <Link
-            href={""}
-            className="group flex items-center gap-4 border-b border-border p-2 hover:border-transparent transition-colors hover:bg-slate-100/90 dark:hover:bg-neutral-500/90"
-            title={name || ""}
-            onClick={handleClick}
-          >
-            <UserAvatar
-              src={image || ""}
-              alt={name || ""}
-              className="group-hover:scale-105 transition-transform"
-            />
-            {name}
-          </Link>
-        </li>
-      )}
+      <li
+        className={`group transition-colors hover:bg-slate-100/90 dark:hover:bg-neutral-500/90 ${
+          isLoading && !conversationId
+            ? "bg-slate-100/90 dark:bg-neutral-500/90"
+            : ""
+        }`}
+      >
+        <Link
+          href={""}
+          className="flex items-center gap-2 p-2"
+          title={name || ""}
+          onClick={handleClick}
+        >
+          <UserAvatar
+            src={image || ""}
+            alt={name || ""}
+            className="group-hover:scale-105 transition-transform"
+          />
+          <p>{name}</p>
+          {isLoading ? <LoadingSpinner className="w-4 h-4" /> : null}
+        </Link>
+      </li>
     </>
   );
 };
