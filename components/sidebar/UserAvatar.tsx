@@ -51,7 +51,7 @@ const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
         <AvatarFallback>{initials}</AvatarFallback>
         {withFileInput ? (
           <FileInput variant={"fixed_bottom_right"} asChild>
-            <IconPhotoPlus />{" "}
+            <IconPhotoPlus />
           </FileInput>
         ) : null}
       </Avatar>
