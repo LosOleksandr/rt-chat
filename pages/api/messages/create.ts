@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import getSession from "@/lib/getSession";
+import uploadToCloudinary from "@/lib/uploadToCloundinary";
 
 type TCreateMessageBody = {
   message: string;
@@ -12,23 +13,35 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const session = await getSession({ req, res });
 
-    if (!session?.user) {
+    if (!session?.user.id) {
       return res.status(401).send("Not Authtorized");
     }
 
     const { message, image, conversationId }: TCreateMessageBody = req.body;
+    let uploadedImageUrl = null;
+
+    if (image) {
+      const uploadParams = {
+        filePath: image,
+        folder: "users_messages",
+        senderId: session.user.id,
+      };
+
+      const result = await uploadToCloudinary(uploadParams);
+      uploadedImageUrl = result.url;
+    }
 
     const newMessage = await prisma.message.create({
       data: {
         body: message,
-        image,
         conversationId,
-        senderId: "cm1exm2g90000bzljugq2vr34",
+        senderId: session.user.id,
+        image: uploadedImageUrl,
         seen: {
           create: {
             user: {
               connect: {
-                id: "cm1exm2g90000bzljugq2vr34",
+                id: session.user.id,
               },
             },
           },

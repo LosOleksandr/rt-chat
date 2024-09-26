@@ -62,7 +62,9 @@ const ConversationBox = ({
   return (
     <li
       className={`${
-        active ? "bg-slate-100/90 dark:bg-neutral-500/90" : null
+        active
+          ? "bg-accent hover:bg-accent dark:hover:bg-accent text-primary-foreground dark:text-primary"
+          : null
       } group hover:bg-slate-100/90 dark:hover:bg-neutral-500/90 rounded-md transition-colors`}
     >
       <Link
@@ -71,7 +73,7 @@ const ConversationBox = ({
       >
         <div className="flex gap-2 items-center">
           <UserAvatar
-            className="group-hover:scale-105 transition-transform"
+            className="group-hover:scale-105 transition-transform text-primary"
             src={otherUser?.image || ""}
             alt={otherUser?.name || "Deleted Account"}
           />
