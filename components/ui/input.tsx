@@ -22,6 +22,7 @@ const inputVariants = cva(
         input:
           "bg-transparent dark:bg-transparent focus:border-accent min-h-max",
         textarea: "min-h-[80px]",
+        ghost: "border-0 min-h-max"
       },
     },
     defaultVariants: {

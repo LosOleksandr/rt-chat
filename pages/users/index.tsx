@@ -9,7 +9,7 @@ const UsersPage: NextPageWithLayout<
 > = ({ user_session }) => {
   return (
     <>
-      <div className="container">
+      <div className="container relative">
         <section>Hi, {user_session?.name}</section>
       </div>
     </>
@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       user_session: session.user,
-    },  
+    },
   };
 };
 
