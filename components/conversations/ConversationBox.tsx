@@ -18,6 +18,7 @@ const ConversationBox = ({
   name,
   createdAt,
 }: TConversationBox) => {
+  console.log("active: ", active);
   const otherUser = useOtherUser(users);
   const { data: session } = useSession();
 
@@ -64,8 +65,8 @@ const ConversationBox = ({
       className={`${
         active
           ? "bg-accent hover:bg-accent dark:hover:bg-accent text-primary-foreground dark:text-primary"
-          : null
-      } group hover:bg-slate-100/90 dark:hover:bg-neutral-500/90 rounded-md transition-colors`}
+          : "hover:bg-slate-100/90 dark:hover:bg-neutral-500/90"
+      } group  rounded-md transition-colors`}
     >
       <Link
         href={conversationsHref}
@@ -74,7 +75,7 @@ const ConversationBox = ({
         <div className="flex gap-2 items-center">
           <UserAvatar
             className="group-hover:scale-105 transition-transform text-primary"
-            src={otherUser?.image || ""}
+            src={otherUser?.image}
             alt={otherUser?.name || "Deleted Account"}
           />
           <div>
