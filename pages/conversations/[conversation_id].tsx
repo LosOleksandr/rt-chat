@@ -51,9 +51,9 @@ const Page: NextPageWithLayout<
 > = ({ conversation }) => {
   return (
     <>
-      <section className="grid grid-rows-[fit-content(10%)_1fr_fit-content(10%)]">
+      <section className="flex flex-col h-screen">
         <ConversationHeader conversation={conversation} />
-        <ConversationBody />
+        <ConversationBody messages={conversation.messages} />
         <ConversationForm />
       </section>
     </>

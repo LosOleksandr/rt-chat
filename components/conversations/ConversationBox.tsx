@@ -18,7 +18,6 @@ const ConversationBox = ({
   name,
   createdAt,
 }: TConversationBox) => {
-  console.log("active: ", active);
   const otherUser = useOtherUser(users);
   const { data: session } = useSession();
 
