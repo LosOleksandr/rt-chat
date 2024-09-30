@@ -69,7 +69,7 @@ const ConversationForm = () => {
       await instance.post("/api/messages/create", {
         conversationId,
         message: data.messageField,
-        image: data.image,
+        image: data.image.length ? data.image : null,
       });
       reset();
       if (isOpen) onModalClose();
