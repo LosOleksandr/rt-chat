@@ -22,7 +22,7 @@ const ImageMessageBox = ({
   return (
     <div
       className={`${
-        isOwn ? "bg-accent " : "bg-background-secondary"
+        isOwn ? "bg-accent" : "bg-background-secondary"
       } p-1 relative rounded-lg`}
     >
       <Image
@@ -45,7 +45,7 @@ const ImageMessageBox = ({
           </span>
         </p>
       ) : (
-        <span className="absolute bottom-2 right-2 px-1 bg-black/50 rounded-xl flex items-center gap-1">
+        <span className="absolute bottom-2 right-2 px-1 bg-black/50 rounded-xl text-primary-foreground dark:text-primary flex items-center gap-1">
           <p className="text-xs">{date}</p>
           {isSeen ? (
             <IconChecks className="w-4 h-4" />

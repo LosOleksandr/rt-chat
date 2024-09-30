@@ -27,9 +27,7 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
   return (
     <li
       className={`flex ${
-        isOwn
-          ? "flex-row-reverse ml-auto text-primary-foreground dark:text-primary"
-          : "flex-row"
+        isOwn ? "flex-row-reverse ml-auto text-primary" : "flex-row "
       } items-start gap-2 md:text-sm text-md`}
     >
       <UserAvatar src={message.sender.image} alt={message.sender.name} />
@@ -48,7 +46,9 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
             <p className="text-xs mb-1">{messageDate}</p>
             <p
               className={`${
-                isOwn ? "bg-accent" : "bg-background-secondary"
+                isOwn
+                  ? "bg-accent text-primary-foreground dark:text-primary"
+                  : "bg-background-secondary"
               } px-2 py-1 rounded-xl flex justify-between gap-2`}
             >
               {message.body}
