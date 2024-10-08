@@ -2,9 +2,8 @@ import { TFullMessage } from "@/types/api";
 import React, { useMemo } from "react";
 import UserAvatar from "../sidebar/UserAvatar";
 import formatMessageDate from "@/lib/utils/formatMessageDate";
-
-import ImageMessageBox from "./ImageMessageBox";
 import { IconCheck, IconChecks } from "@tabler/icons-react";
+import Image from "next/image";
 
 type TMessageBox = {
   message: TFullMessage;
@@ -28,39 +27,49 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
     <li
       className={`flex ${
         isOwn ? "flex-row-reverse ml-auto text-primary" : "flex-row "
-      } items-start gap-2 md:text-sm text-md`}
+      } items-start gap-2 md:text-sm text-md max-w-sm`}
     >
       <UserAvatar src={message.sender.image} alt={message.sender.name} />
-      <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} `}>
+      <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
+        <div
+          className={`flex gap-1 ${isOwn ? "flex-row-reverse" : "flex-row"}`}
+        >
+          <p className="text-xs mb-1">{messageDate}</p>
+          {seenList.length > 0 ? (
+            <IconChecks className="w-4 h-4" />
+          ) : (
+            <IconCheck className="w-4 h-4" />
+          )}
+        </div>
         {message.image ? (
-          <ImageMessageBox
-            src={message.image}
-            alt={message.senderId}
-            body={message.body}
-            date={messageDate}
-            isSeen={seenList.length > 0}
-            isOwn={isOwn}
-          />
+          <div
+            className={`${
+              isOwn ? "bg-accent" : "bg-background-secondary"
+            } p-1 relative rounded-lg`}
+          >
+            <Image
+              src={message.image}
+              width={200}
+              height={200}
+              alt={message.sender.name || ""}
+              style={{ borderRadius: "10px" }}
+            />
+            {message.body && (
+              <p className="mt-2 ml-1 inline-block break-words items-center justify-between gap-2">
+                {message.body}
+              </p>
+            )}
+          </div>
         ) : (
-          <>
-            <p className="text-xs mb-1">{messageDate}</p>
-            <p
-              className={`${
-                isOwn
-                  ? "bg-accent text-primary-foreground dark:text-primary"
-                  : "bg-background-secondary"
-              } px-2 py-1 rounded-xl flex justify-between gap-2`}
-            >
-              {message.body}
-              <span className="mt-auto">
-                {seenList.length > 0 ? (
-                  <IconChecks className="w-4 h-4" />
-                ) : (
-                  <IconCheck className="w-4 h-4" />
-                )}
-              </span>
-            </p>
-          </>
+          <div
+            className={`${
+              isOwn
+                ? "bg-accent text-primary-foreground dark:text-primary"
+                : "bg-background-secondary"
+            } px-2 py-1 rounded-lg`}
+          >
+            <p className={`break-all`}>{message.body}</p>
+          </div>
         )}
       </div>
     </li>

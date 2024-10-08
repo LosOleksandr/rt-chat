@@ -96,28 +96,24 @@ const AuthForm = ({ providers, action }: TAuthForm) => {
         {action === AuthActions.SIGNUP && (
           <>
             <Input
-              as="input"
               {...register("name")}
               type="text"
               label="Name"
               errors={errors}
             />
             <Input
-              as="input"
               {...register("email")}
               type="email"
               label="Email"
               errors={errors}
             />
             <Input
-              as="input"
               {...register("password")}
               type="password"
               label="Password"
               errors={errors}
             />
             <Input
-              as="input"
               {...register("passwordConfirm")}
               type="password"
               label="Password confirm"
@@ -128,14 +124,12 @@ const AuthForm = ({ providers, action }: TAuthForm) => {
         {action === AuthActions.LOGIN && (
           <>
             <Input
-              as="input"
               {...register("email")}
               type="email"
               label="Email"
               errors={errors}
             />
             <Input
-              as="input"
               {...register("password")}
               type="password"
               label="Password"

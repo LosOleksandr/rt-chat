@@ -3,6 +3,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import React, {
   FC,
   InputHTMLAttributes,
+  RefObject,
   SyntheticEvent,
   forwardRef,
   useState,
@@ -10,41 +11,37 @@ import React, {
 import { FieldErrors } from "react-hook-form";
 import { Button } from "./button";
 import { IconEye, IconEyeClosed } from "@tabler/icons-react";
-import { Textarea } from "./textarea";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const inputVariants = cva(
-  "block w-full transition-colors bg-transparent dark:bg-transparent p-1 mt-1 outline-none rounded-md border-2 border-border resize-none",
+  "w-full transition-colors bg-transparent dark:bg-transparent p-1 mt-1 outline-none rounded-md border-2 border-border ",
   {
     variants: {
       variant: {
-        input:
-          "bg-transparent dark:bg-transparent focus:border-accent min-h-max",
-        textarea: "min-h-[80px]",
-        ghost: "border-0 min-h-max"
+        default:
+          "bg-transparent dark:bg-transparent focus:border-accent min-h-max m-0",
+        ghost: "border-0 min-h-max",
       },
     },
     defaultVariants: {
-      variant: "input",
+      variant: "default",
     },
   }
 );
 
-type TInput = InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> &
+type TInput = InputHTMLAttributes<HTMLInputElement> &
   VariantProps<typeof inputVariants> & {
-    as: "input" | "textarea";
     onChange?: (e: SyntheticEvent) => void;
     onBlur?: (e: SyntheticEvent) => void;
     label?: string;
     errors?: FieldErrors;
-    className?: string;
   };
 
 export const Input: FC<TInput> = forwardRef(
   (
-    { as, onBlur, onChange, label, errors, className, variant, ...props },
-    ref: React.Ref<HTMLInputElement | HTMLTextAreaElement>
+    { onBlur, onChange, label, errors, className, variant, ...props },
+    ref: React.Ref<HTMLInputElement>
   ) => {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -58,50 +55,8 @@ export const Input: FC<TInput> = forwardRef(
       >
         {label}
         <div className="relative">
-          {as === "input" && (
-            <>
-              <input
-                className={cn(
-                  inputVariants({ variant, className }),
-                  `${
-                    errors?.[props.name as keyof TSignupCreds] || errors?.root
-                      ? "border-danger focus:border-red-600 animate-shaking"
-                      : null
-                  }`
-                )}
-                onBlur={onBlur}
-                onChange={onChange}
-                ref={ref as React.Ref<HTMLInputElement>}
-                type={showPassword ? "text" : props.type}
-                {...props}
-              />
-              {props.type === "password" && (
-                <Button
-                  tabIndex={-1}
-                  type="button"
-                  className={`absolute top-0 right-0`}
-                  variant={
-                    errors?.[props.name as keyof TSignupCreds] || errors?.root
-                      ? "ghost-destructive"
-                      : "ghost"
-                  }
-                  onClick={() => {
-                    setShowPassword(!showPassword);
-                  }}
-                >
-                  {showPassword ? (
-                    <IconEyeClosed size={24} />
-                  ) : (
-                    <IconEye size={24} />
-                  )}
-                </Button>
-              )}
-            </>
-          )}
-          {as === "textarea" && (
-            <Textarea
-              //@ts-expect-error not-included-property
-              style={{ fieldSizing: "content" }}
+          <>
+            <input
               className={cn(
                 inputVariants({ variant, className }),
                 `${
@@ -112,10 +67,32 @@ export const Input: FC<TInput> = forwardRef(
               )}
               onBlur={onBlur}
               onChange={onChange}
-              ref={ref as React.Ref<HTMLTextAreaElement>}
+              ref={ref as React.Ref<HTMLInputElement>}
+              type={showPassword ? "text" : props.type}
               {...props}
             />
-          )}
+            {props.type === "password" && (
+              <Button
+                tabIndex={-1}
+                type="button"
+                className={`absolute top-0 right-0`}
+                variant={
+                  errors?.[props.name as keyof TSignupCreds] || errors?.root
+                    ? "ghost-destructive"
+                    : "ghost"
+                }
+                onClick={() => {
+                  setShowPassword(!showPassword);
+                }}
+              >
+                {showPassword ? (
+                  <IconEyeClosed size={24} />
+                ) : (
+                  <IconEye size={24} />
+                )}
+              </Button>
+            )}
+          </>
         </div>
         {errors && (
           <ErrorMessage

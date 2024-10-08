@@ -50,7 +50,7 @@ const UserAvatar = forwardRef<HTMLSpanElement, TUserAvatar>(
         <AvatarImage className="rounded-full" src={src || ""} alt={alt || ""} />
         <AvatarFallback>{initials}</AvatarFallback>
         {withFileInput ? (
-          <FileInput variant={"fixed_bottom_right"} asChild>
+          <FileInput className="bottom-2 right-2"  asChild>
             <IconPhotoPlus />
           </FileInput>
         ) : null}
