@@ -31,7 +31,7 @@ const ConversationList = () => {
 
 const Loading = ({ number }: { number: number }) => {
   return (
-    <ul className="flex flex-col gap-1 mt-4 overflow-auto">
+    <ul className="flex-col gap-1 mt-4 overflow-auto hidden sm:flex">
       {Array.from({ length: number }).map((_, index) => (
         <li key={index} className="flex items-center gap-4 p-2 justify-between">
           <div className="flex items-center gap-2">

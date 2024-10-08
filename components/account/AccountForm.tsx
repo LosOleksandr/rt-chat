@@ -53,7 +53,6 @@ const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
       >
         <>
           <Input
-            as="input"
             {...register("name")}
             type="text"
             disabled={isSubmitting}
@@ -62,7 +61,6 @@ const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
             defaultValue={user.name !== null ? user.name : ""}
           />
           <Input
-            as="input"
             {...register("email")}
             type="text"
             label="Email"
@@ -71,7 +69,6 @@ const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
             defaultValue={user.email !== null ? user.email : ""}
           />
           <Input
-            as="input"
             {...register("phone")}
             type="text"
             label="Phone"
@@ -80,7 +77,6 @@ const AccountForm = ({ setIsEditing, user, setUserInfo }: TAccountForm) => {
             defaultValue={user.phone !== null ? user.phone : ""}
           />
           <Input
-            as="textarea"
             {...register("description")}
             type="text"
             label="About me"
