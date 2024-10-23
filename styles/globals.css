@@ -65,7 +65,6 @@
     @apply bg-background dark:bg-primary dark:text-secondary text-primary;
   }
 }
-
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -73,5 +72,38 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0.4rem;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    border-radius: 9999px;
+    background-color: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: #d1d5db;
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #6b7280;
+  }
+
+  .custom-scrollbar-transparent::-webkit-scrollbar {
+    width: 0.4rem;
+  }
+
+  .custom-scrollbar-transparent::-webkit-scrollbar-track {
+    border-radius: 9999px;
+    background-color: transparent;
+  }
+
+  .custom-scrollbar-transparent::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  .dark .custom-scrollbar-transparent::-webkit-scrollbar-thumb {
+    background-color: transparent;
   }
 }

@@ -1,4 +1,10 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const useTextarea = (formRef?: MutableRefObject<HTMLFormElement | null>) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -8,9 +14,31 @@ const useTextarea = (formRef?: MutableRefObject<HTMLFormElement | null>) => {
   const textarea = textareaRef.current;
 
   const resetSize = () => {
-    if (!textarea) return;
-    textarea.style.height = "auto";
+    if (textarea) textarea.style.height = "auto";
   };
+
+  const handleAutoSize = useCallback(() => {
+    if (!textarea) return;
+
+    textarea.style.transition = "max-height 0.2s ease-in-out";
+
+    textarea.style.height = "auto";
+
+    const textareaStyles = getComputedStyle(textarea);
+    const maxHeight = parseInt(textareaStyles.maxHeight);
+
+    textarea.style.height = `${textarea.scrollHeight}px`;
+
+    if (textarea.scrollHeight > maxHeight) {
+      textarea.style.overflowY = "auto";
+    } else {
+      textarea.style.overflowY = "hidden";
+    }
+  }, [textarea]);
+
+  useEffect(() => {
+    handleAutoSize();
+  }, [handleAutoSize, textarea]);
 
   useEffect(() => {
     const submitTextareaOnEnter = (e: globalThis.KeyboardEvent) => {
@@ -36,20 +64,6 @@ const useTextarea = (formRef?: MutableRefObject<HTMLFormElement | null>) => {
   }, [shouldSubmitOnEnter, textarea, formRef]);
 
   useEffect(() => {
-    const handleAutoSize = () => {
-      if (!textarea) return;
-      textarea.style.height = "auto";
-
-      const textareaStyles = getComputedStyle(textarea);
-      const maxHeight = parseInt(textareaStyles.maxHeight);
-
-      textarea.style.height = `${textarea.scrollHeight}px`;
-
-      textarea.scrollHeight > maxHeight
-        ? (textarea.style.overflowY = "auto")
-        : (textarea.style.overflowY = "hidden");
-    };
-
     if (shouldAutoSize) {
       if (textarea) {
         textarea.addEventListener("input", handleAutoSize);
@@ -61,7 +75,7 @@ const useTextarea = (formRef?: MutableRefObject<HTMLFormElement | null>) => {
         }
       };
     }
-  }, [textarea, shouldAutoSize]);
+  }, [textarea, shouldAutoSize, handleAutoSize]);
 
   const disableAutoSize = () => {
     setShouldAutoSize(false);
@@ -77,6 +91,7 @@ const useTextarea = (formRef?: MutableRefObject<HTMLFormElement | null>) => {
     resetSize,
     disableAutoSize,
     disableSumbitOnEnter,
+    handleAutoSize,
   };
 };
 

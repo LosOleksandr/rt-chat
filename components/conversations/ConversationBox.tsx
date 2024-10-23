@@ -65,21 +65,23 @@ const ConversationBox = ({
         active
           ? "bg-accent hover:bg-accent dark:hover:bg-accent text-primary-foreground dark:text-primary"
           : "hover:bg-slate-100/90 dark:hover:bg-neutral-500/90"
-      } group  rounded-md transition-colors`}
+      } group rounded-md transition-colors`}
     >
       <Link
         href={conversationsHref}
-        className="flex items-center justify-between gap-4 p-2 "
+        className="flex items-center justify-between gap-4 p-2 max-w-full w-full"
       >
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center w-full overflow-hidden">
           <UserAvatar
             className="group-hover:scale-105 transition-transform text-primary"
             src={otherUser?.image}
-            alt={otherUser?.name || "Deleted Account"}
+          alt={otherUser?.name || "Deleted Account"}
           />
-          <div>
-            <p>{name || otherUser?.name || "Deleted Account"}</p>
-            <p className="text-sm relative">
+          <div className="flex-1 min-w-0">
+            <p className="truncate">
+              {name || otherUser?.name || "Deleted Account"}
+            </p>
+            <p className="text-sm truncate relative">
               {lastMessageBody}
               {hasSeen && (
                 <span className="absolute h-2 w-2 rounded-full bg-accent top-1/2 -translate-y-1/2 -right-5" />
@@ -87,7 +89,7 @@ const ConversationBox = ({
             </p>
           </div>
         </div>
-        <p className="text-xs">
+        <p className="text-xs whitespace-nowrap">
           {formatMessageDate(
             new Date(
               lastMessage?.createdAt ? lastMessage?.createdAt : createdAt

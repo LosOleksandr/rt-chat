@@ -27,7 +27,7 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
     <li
       className={`flex ${
         isOwn ? "flex-row-reverse ml-auto text-primary" : "flex-row "
-      } items-start gap-2 md:text-sm text-md max-w-sm`}
+      } items-start gap-2 md:text-sm text-md max-w-full px-4 xs:max-w-sm sm:max-w-md`}
     >
       <UserAvatar src={message.sender.image} alt={message.sender.name} />
       <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
@@ -44,7 +44,9 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
         {message.image ? (
           <div
             className={`${
-              isOwn ? "bg-accent" : "bg-background-secondary"
+              isOwn
+                ? "bg-accent text-primary-foreground dark:text-primary"
+                : "bg-background-secondary"
             } p-1 relative rounded-lg`}
           >
             <Image
@@ -55,7 +57,7 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
               style={{ borderRadius: "10px" }}
             />
             {message.body && (
-              <p className="mt-2 ml-1 inline-block break-words items-center justify-between gap-2">
+              <p className="mt-2 ml-1 inline-block break-all max-w-[200px] items-center justify-between gap-2">
                 {message.body}
               </p>
             )}

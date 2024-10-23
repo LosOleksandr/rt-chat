@@ -8,7 +8,7 @@ const ConversationHeader = ({
 }: {
   conversation: TFullConversation;
 }) => {
-  const otherUser = useOtherUser(conversation.users);
+  const otherUser = useOtherUser(conversation?.users);
 
   const statusText = useMemo(() => {
     if (conversation.isGroup) {

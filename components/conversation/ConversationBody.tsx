@@ -1,7 +1,11 @@
-import { TFullMessage } from "@/types/api";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import MessageBox from "./MessageBox";
+import EmptyState from "../EmptyState";
+import useScroll from "@/hooks/useScroll";
+import { Button } from "../ui/button";
+import { IconArrowBarToDown } from "@tabler/icons-react";
+import { TFullMessage } from "@/types/api";
 
 type TConversationBody = {
   messages: TFullMessage[];
@@ -17,21 +21,50 @@ const ConversationBody = ({ messages }: TConversationBody) => {
     }));
   }, [messages, session?.user.id]);
 
-  const renderCondition = status !== "loading" && processedMessages.length > 0;
+  const {
+    ref: messageContainerRef,
+    scrollToBottom,
+    showScrollToBottom,
+  } = useScroll<HTMLDivElement>();
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [processedMessages, scrollToBottom]);
 
   return (
-    <div className="w-full h-screen max-w-6xl py-4 mx-auto flex-1 overflow-y-auto">
-      <ul className="flex flex-col gap-4">
-        {renderCondition &&
-          processedMessages.map((message, i) => (
-            <MessageBox
-              key={message.id}
-              message={message}
-              isLast={i === messages.length - 1}
-              isOwn={message.isOwn}
-            />
-          ))}
-      </ul>
+    <div className="min-h-0 max-h-full w-full max-w-6xl mx-auto sm:py-4 py-2 relative">
+      <div
+        className="h-full overflow-y-auto scrollbar-hidden sm:custom-scrollbar-transparent sm:hover:custom-scrollbar"
+        ref={messageContainerRef}
+      >
+        {messages.length > 0 ? (
+          <ul className="flex flex-col gap-4">
+            {status !== "loading" &&
+              processedMessages.map((message, i) => (
+                <MessageBox
+                  key={message.id}
+                  message={message}
+                  isLast={i === messages.length - 1}
+                  isOwn={message.isOwn}
+                />
+              ))}
+          </ul>
+        ) : (
+          <EmptyState>No messages here yet</EmptyState>
+        )}
+      </div>
+      <Button
+        variant={"ghost"}
+        onClick={() => scrollToBottom("smooth")}
+        className={`${
+          showScrollToBottom
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10 scale-0"
+        }  absolute left-1/2 -translate-x-1/2 w-9 h-9 bottom-4 p-2 drop-shadow-xl shadow-black bg-black/40 hover:bg-black/50 dark:bg-black/75 dark:hover:bg-black/60 
+          hover:text-primary-foreground text-primary-foreground dark:text-primary rounded-full transition-all`}
+      >
+        <IconArrowBarToDown />
+      </Button>
     </div>
   );
 };
