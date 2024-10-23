@@ -1,8 +1,6 @@
 import React from "react";
 import Sidebar from "./sidebar/Sidebar";
 import SidebarList from "./sidebar/SidebarList";
-import MobileFooter from "./mobile/MobileFooter";
-import MobileFooterList from "./mobile/MobileFooterList";
 
 const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -12,9 +10,9 @@ const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarList />
         </Sidebar>
         {children}
-        <MobileFooter>
+        {/* <MobileFooter>
           <MobileFooterList />
-        </MobileFooter>
+        </MobileFooter> */}
       </div>
     </main>
   );

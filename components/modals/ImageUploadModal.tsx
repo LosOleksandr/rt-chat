@@ -29,10 +29,18 @@ const ImageUploadModal = ({ onClose, formRef }: TImageUploadModal) => {
     watch,
     formState: { isSubmitting },
   } = useFormContext<TConversationFormData>();
+  const { textareaRef, handleAutoSize } = useTextarea(formRef);
 
   const { ref, ...rest } = register("caption");
 
-  const { textareaRef } = useTextarea(formRef);
+  const captionValue = watch("caption");
+
+  useEffect(() => {
+    console.log(textareaRef);
+    if (textareaRef.current) {
+      console.log(textareaRef.current);
+    }
+  }, [textareaRef, captionValue, handleAutoSize]);
 
   useEffect(() => {
     const message = getValues("message");

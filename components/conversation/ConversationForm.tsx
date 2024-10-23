@@ -1,17 +1,21 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { ChangeEvent, MouseEvent, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import instance from "@/lib/instance";
 import useConversations from "@/hooks/useConversations";
 import dynamic from "next/dynamic";
 import useModal from "@/hooks/useModal";
 import getFileUri from "@/lib/utils/getFileUri";
-import MessageForm from "./MessageForm";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useTextarea from "@/hooks/useTextarea";
 import { AxiosError } from "axios";
+import { Button } from "../ui/button";
+import { IconMoodSmile, IconPhotoPlus } from "@tabler/icons-react";
+import { Textarea } from "../ui/textarea";
+import FileInput from "../ui/file-input";
+import { IconSend2 } from "@tabler/icons-react";
 
 const ImageUploadModal = dynamic(
   () => import("@/components/modals/ImageUploadModal"),
@@ -35,20 +39,29 @@ const ConversationForm = () => {
     resolver: zodResolver(schema),
   });
 
-  console.log(methods.formState.errors);
-  console.log(methods.watch());
   const formRef = useRef<HTMLFormElement | null>(null);
+
   const { conversationId } = useConversations();
   const { isOpen, onClose, onOpen } = useModal();
-  const { textareaRef, resetSize, disableAutoSize, disableSumbitOnEnter } =
-    useTextarea(formRef);
+  const { textareaRef, resetSize } = useTextarea(formRef);
 
-  const onFileSelect = (files: FileList) => {
+  const messageValue = methods.watch("message");
+
+  const { ref, ...rest } = methods.register("message");
+
+  const onFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
     if (files?.length) {
       const imageFiles: File[] = Array.from(files);
       methods.setValue("image", imageFiles);
+      resetSize();
       onOpen();
     }
+  };
+
+  const resetFileInput = (e: MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.value = "";
   };
 
   const handleReset = () => {
@@ -58,7 +71,6 @@ const ConversationForm = () => {
   };
 
   const onSubmit = async (data: TConversationFormData) => {
-    console.log("data: ", data);
     try {
       const fileUris =
         data.image && data.image.length
@@ -87,17 +99,55 @@ const ConversationForm = () => {
       <div className="border-t border-border p-4">
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="mx-auto max-w-lg h-full"
+          className="mx-auto sm:max-w-lg h-full"
           ref={formRef}
         >
-          <MessageForm
-            onFileSelect={onFileSelect}
-            textareaProps={{
-              textareaRef,
-              disableAutoSize,
-              disableSumbitOnEnter,
-            }}
-          />
+          <div className="flex w-full items-end gap-2">
+            <div
+              className={`flex-1 w-full flex border-2 border-border rounded-md items-end px-2 transition-transform ${
+                messageValue ? "translate-x-0" : "translate-x-10"
+              }`}
+            >
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="pb-4"
+              >
+                <IconMoodSmile />
+              </Button>
+              <Textarea
+                {...rest}
+                variant="ghost"
+                placeholder="Type a message here..."
+                ref={(e) => {
+                  ref(e);
+                  textareaRef.current = e;
+                }}
+              />
+              <FileInput
+                onChange={onFileSelect}
+                onClick={resetFileInput}
+                className="pb-2"
+                multiple
+              >
+                <IconPhotoPlus />
+              </FileInput>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={methods.formState.isSubmitting}
+              className={`transition-all rounded-full p-0 h-12 w-12 ${
+                messageValue
+                  ? "opacity-100 translate-x-0 pointer-events-auto"
+                  : "opacity-0 -translate-x-10 pointer-events-none scale-0"
+              }`}
+              title="Send Message"
+            >
+              <IconSend2 className="w-5 h-5" />
+            </Button>
+          </div>
           {isOpen && <ImageUploadModal onClose={onClose} formRef={formRef} />}
         </form>
       </div>
