@@ -19,7 +19,7 @@ const ConversationHeader = ({
   }, [conversation.isGroup, conversation.users.length]);
 
   return (
-    <header className="border-b border-border flex items-end gap-2 p-2 bg-background-secondary">
+    <header className="border-b border-border max-h-14 flex items-end gap-2 p-2 bg-background-secondary">
       <UserAvatar
         src={otherUser?.image || ""}
         alt={otherUser?.name || "Deleted Account"}

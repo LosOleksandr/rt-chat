@@ -32,7 +32,7 @@ const ConversationBody = ({ messages }: TConversationBody) => {
   }, [processedMessages, scrollToBottom]);
 
   return (
-    <div className="min-h-0 max-h-full w-full max-w-6xl mx-auto sm:py-4 py-2 relative">
+    <div className="min-h-0 max-h-full h-full w-full max-w-6xl mx-auto sm:py-4 py-2 relative">
       <div
         className="h-full overflow-y-auto scrollbar-hidden sm:custom-scrollbar-transparent sm:hover:custom-scrollbar"
         ref={messageContainerRef}
