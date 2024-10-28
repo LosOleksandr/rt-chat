@@ -6,6 +6,8 @@ import useScroll from "@/hooks/useScroll";
 import { Button } from "../ui/button";
 import { IconArrowBarToDown } from "@tabler/icons-react";
 import { TFullMessage } from "@/types/api";
+import axios from "axios";
+import { useParams } from "next/navigation";
 
 type TConversationBody = {
   messages: TFullMessage[];
@@ -13,6 +15,9 @@ type TConversationBody = {
 
 const ConversationBody = ({ messages }: TConversationBody) => {
   const { data: session, status } = useSession();
+  const params = useParams();
+
+  const conversationId = params.conversation_id;
 
   const processedMessages = useMemo(() => {
     return messages.map((message) => ({
@@ -30,6 +35,13 @@ const ConversationBody = ({ messages }: TConversationBody) => {
   useEffect(() => {
     scrollToBottom();
   }, [processedMessages, scrollToBottom]);
+
+  useEffect(() => {
+    axios
+      .post(`/api/conversations/${conversationId}/seen`)
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+  }, [conversationId, messages]);
 
   return (
     <div className="min-h-0 max-h-full h-full w-full max-w-6xl mx-auto sm:py-4 py-2 relative">

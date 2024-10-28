@@ -38,14 +38,16 @@ const ConversationBox = ({
 
     const seenArr = lastMessage.seen || [];
 
-    if (session?.user.email) {
-      return false;
-    }
-
     return (
-      seenArr.filter((user) => user.email === session?.user.email).length !== 0
+      seenArr.filter((seen) => seen.userId === session?.user.id).length === 0
     );
-  }, [lastMessage, session?.user.email]);
+  }, [lastMessage, session?.user.id]);
+
+  const unseenMessagesCount = useMemo(() => {
+    return messages.filter((message) => {
+      return !message.seen.some((seen) => seen.userId === session?.user.id);
+    }).length;
+  }, [messages, session?.user.id]);
 
   const lastMessageBody = useMemo(() => {
     if (lastMessage?.image) {
@@ -69,33 +71,52 @@ const ConversationBox = ({
     >
       <Link
         href={conversationsHref}
-        className="flex items-center justify-between gap-4 p-2 max-w-full w-full"
+        className="flex  justify-between gap-4 p-2 max-w-full w-full"
       >
         <div className="flex gap-2 items-center w-full overflow-hidden">
           <UserAvatar
             className="group-hover:scale-105 transition-transform text-primary"
             src={otherUser?.image}
-          alt={otherUser?.name || "Deleted Account"}
+            alt={otherUser?.name || "Deleted Account"}
           />
           <div className="flex-1 min-w-0">
             <p className="truncate">
               {name || otherUser?.name || "Deleted Account"}
             </p>
-            <p className="text-sm truncate relative">
-              {lastMessageBody}
-              {hasSeen && (
-                <span className="absolute h-2 w-2 rounded-full bg-accent top-1/2 -translate-y-1/2 -right-5" />
-              )}
-            </p>
+            <div className="flex  items-center">
+              <p className="text-sm truncate">
+                {lastMessage?.senderId === session?.user.id ? (
+                  <span
+                    className={`mr-2 ${
+                      active ? "text-neutral-300" : "text-neutral-400"
+                    }`}
+                  >
+                    You:
+                  </span>
+                ) : null}
+                {lastMessageBody}
+              </p>
+            </div>
           </div>
         </div>
-        <p className="text-xs whitespace-nowrap">
-          {formatMessageDate(
-            new Date(
-              lastMessage?.createdAt ? lastMessage?.createdAt : createdAt
-            )
+        <div className="flex flex-col gap-2 items-center">
+          <p className="text-xs whitespace-nowrap">
+            {formatMessageDate(
+              new Date(
+                lastMessage?.createdAt ? lastMessage?.createdAt : createdAt
+              )
+            )}
+          </p>
+          {hasSeen && (
+            <span
+              className={`flex justify-center items-center h-5 w-5 text-xs rounded-full ${
+                active ? "bg-primary text-primary-foreground" : "bg-accent"
+              }`}
+            >
+              {unseenMessagesCount}
+            </span>
           )}
-        </p>
+        </div>
       </Link>
     </li>
   );

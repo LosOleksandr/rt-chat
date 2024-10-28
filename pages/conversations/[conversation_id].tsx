@@ -9,6 +9,8 @@ import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LoadingSpinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const conversationId = params?.conversation_id as string;
@@ -21,10 +23,21 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 const Page: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ conversationId }) => {
-  const { data: conversation, isLoading } = useSWR(
-    `/api/conversations/${conversationId}`,
-    fetcher
-  );
+  const {
+    data: conversation,
+    isLoading,
+    error,
+  } = useSWR(`/api/conversations/${conversationId}`, fetcher);
+
+  const router = useRouter();
+
+  if (error)
+    return (
+      <div>
+        Error 404
+        <Button onClick={router.refresh}>Reload</Button>
+      </div>
+    );
 
   return (
     <section className="flex flex-col h-screen">
