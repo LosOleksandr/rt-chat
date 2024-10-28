@@ -4,6 +4,7 @@ import UserAvatar from "../sidebar/UserAvatar";
 import formatMessageDate from "@/lib/utils/formatMessageDate";
 import { IconCheck, IconChecks } from "@tabler/icons-react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 type TMessageBox = {
   message: TFullMessage;
@@ -12,11 +13,18 @@ type TMessageBox = {
 };
 
 const MessageBox = ({ message, isOwn }: TMessageBox) => {
+  const { data: session } = useSession();
+
   const seenList = useMemo(() => {
     return (message.seen || [])
-      .filter((user) => user.id === message.senderId)
-      .map((user) => user.name)
-      .join(", ");
+      .filter(({ userId }) => userId !== message.senderId)
+      .map((seen) => seen.user.name);
+  }, [message.seen, message.senderId]);
+
+  const isMessageSeen = useMemo(() => {
+    return (message.seen || []).some(
+      (seen) => seen.userId !== message.senderId
+    );
   }, [message.seen, message.senderId]);
 
   const messageDate = useMemo(() => {
@@ -35,7 +43,7 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
           className={`flex gap-1 ${isOwn ? "flex-row-reverse" : "flex-row"}`}
         >
           <p className="text-xs mb-1">{messageDate}</p>
-          {seenList.length > 0 ? (
+          {isMessageSeen ? (
             <IconChecks className="w-4 h-4" />
           ) : (
             <IconCheck className="w-4 h-4" />
@@ -73,6 +81,10 @@ const MessageBox = ({ message, isOwn }: TMessageBox) => {
             <p className={`break-all`}>{message.body}</p>
           </div>
         )}
+        {seenList.length > 1 &&
+          !seenList.includes(session?.user.name || "") && (
+            <small className="text-muted">seen by {seenList}</small>
+          )}
       </div>
     </li>
   );

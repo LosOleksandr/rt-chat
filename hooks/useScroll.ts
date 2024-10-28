@@ -30,7 +30,6 @@ const useScroll = <RefType extends HTMLElement>() => {
   useEffect(() => {
     const refCurrent = ref.current;
     if (refCurrent) {
-      console.log("useEffect");
       refCurrent.addEventListener("scroll", handleScroll);
 
       return () => {

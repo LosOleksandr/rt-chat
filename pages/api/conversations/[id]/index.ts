@@ -29,7 +29,15 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     const messages = await prisma.message.findMany({
       where: { conversationId },
-      include: { seen: true, sender: true },
+      include: {
+        seen: {
+          include: {
+            message: true,
+            user: true,
+          },
+        },
+        sender: true,
+      },
       orderBy: { createdAt: "asc" },
     });
 
