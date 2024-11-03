@@ -18,6 +18,9 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
           },
         },
       },
+      orderBy: {
+        lastMessagesAt: "desc",
+      },
       include: {
         messages: {
           include: {

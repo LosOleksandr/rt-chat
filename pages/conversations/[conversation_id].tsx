@@ -9,11 +9,10 @@ import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { TFullConversation } from "@/types/api";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const conversationId = params?.conversation_id as string;
+  const conversationId = params?.conversation_id;
 
   return {
     props: { conversationId },
@@ -27,27 +26,24 @@ const Page: NextPageWithLayout<
     data: conversation,
     isLoading,
     error,
-  } = useSWR(`/api/conversations/${conversationId}`, fetcher);
+  } = useSWR(
+    `/api/conversations/${conversationId}`,
+    fetcher<TFullConversation>
+  );
 
-  const router = useRouter();
-
-  if (error)
-    return (
-      <div>
-        Error 404
-        <Button onClick={router.refresh}>Reload</Button>
-      </div>
-    );
+  if (error) return <div>Error 404</div>;
 
   return (
     <section className="flex flex-col h-screen">
       {isLoading ? (
         <Loading />
       ) : (
-        <>
-          <ConversationHeader conversation={conversation} />
-          <ConversationBody messages={conversation?.messages} />
-        </>
+        conversation && (
+          <>
+            <ConversationHeader conversation={conversation} />
+            <ConversationBody messages={conversation?.messages} />
+          </>
+        )
       )}
       <ConversationForm />
     </section>

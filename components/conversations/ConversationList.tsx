@@ -1,15 +1,65 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ConversationBox from "./ConversationBox";
 import useConversations from "@/hooks/useConversations";
-import { TFullConversation } from "@/types/api";
-import useSWR, { SWRResponse } from "swr";
+import { TFullConversation, TFullMessage } from "@/types/api";
+import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import { Skeleton } from "../ui/skeleton";
+import { pusherClient } from "@/lib/pusher-client";
+import { useSession } from "next-auth/react";
 
 const ConversationList = () => {
   const { conversationId } = useConversations();
-  const { data: conversations, isLoading }: SWRResponse<TFullConversation[]> =
-    useSWR("/api/conversations/get", fetcher);
+  const { data: session, status } = useSession();
+  const {
+    data: conversations,
+    isLoading,
+    mutate,
+  } = useSWR("/api/conversations/get", fetcher<TFullConversation[]>);
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user.id) {
+      const userId = session.user.id;
+      pusherClient.subscribe(userId);
+
+      const updateConversations = (
+        prevConversations: TFullConversation[],
+        updatedConversation: {
+          id: string;
+          message: TFullMessage;
+        }
+      ) => {
+        const { message, id } = updatedConversation;
+
+        return prevConversations.map((conversation) =>
+          conversation.id === id && message
+            ? {
+                ...conversation,
+                messages: [...conversation.messages, message],
+              }
+            : conversation
+        );
+      };
+
+      const conversationsUpdateHandler = (updatedConversation: {
+        id: string;
+        message: TFullMessage;
+      }) => {
+        mutate((prev: TFullConversation[] | undefined) => {
+          if (!prev) return prev;
+
+          return updateConversations(prev, updatedConversation);
+        });
+      };
+
+      pusherClient.bind("conversation:update", conversationsUpdateHandler);
+
+      return () => {
+        pusherClient.unbind("conversation:update", conversationsUpdateHandler);
+        pusherClient.unsubscribe(userId);
+      };
+    }
+  }, [mutate, session?.user.id, status]);
 
   if (isLoading) return <Loading number={5} />;
 

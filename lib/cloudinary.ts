@@ -12,7 +12,6 @@ if (!process.env.CLOUDINARY_API_SECRET) {
   throw new Error("CLOUDINARY_API_SECRET variable is required");
 }
 
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,

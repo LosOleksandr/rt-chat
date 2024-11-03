@@ -1,17 +1,14 @@
 import React from "react";
 import UserBox from "./UserBox";
 import { TUsersWithConversationExists } from "@/types/api";
-import useSWR, { SWRResponse } from "swr";
+import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import { Skeleton } from "../ui/skeleton";
 
 const UsersList = () => {
-  const {
-    data: users,
-    isLoading,
-  }: SWRResponse<TUsersWithConversationExists[]> = useSWR(
+  const { data: users, isLoading } = useSWR(
     "/api/users/get",
-    fetcher
+    fetcher<TUsersWithConversationExists[]>
   );
 
   if (isLoading) {
