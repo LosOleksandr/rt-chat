@@ -26,9 +26,7 @@ const ConversationBox = ({
   }, [id]);
 
   const lastMessage = useMemo(() => {
-    const messagesArr = messages || [];
-
-    return messagesArr[messages.length - 1];
+    return messages[messages.length - 1];
   }, [messages]);
 
   const hasSeen = useMemo(() => {
@@ -87,7 +85,7 @@ const ConversationBox = ({
               <p className="text-sm truncate">
                 {lastMessage?.senderId === session?.user.id ? (
                   <span
-                    className={`mr-2 ${
+                    className={`mr-1 ${
                       active ? "text-neutral-300" : "text-neutral-400"
                     }`}
                   >
@@ -110,7 +108,9 @@ const ConversationBox = ({
           {hasSeen && (
             <span
               className={`flex justify-center items-center h-5 w-5 text-xs rounded-full ${
-                active ? "bg-primary text-primary-foreground" : "bg-accent"
+                active
+                  ? "bg-primary-foreground dark:bg-primary text-primary dark:text-primary-foreground"
+                  : "bg-accent text-primary-foreground dark:text-primary"
               }`}
             >
               {unseenMessagesCount}
