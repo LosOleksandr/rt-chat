@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 
 const ConversationList = () => {
   const { conversationId } = useConversations();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const {
     data: conversations,
     isLoading,
@@ -18,27 +18,40 @@ const ConversationList = () => {
   } = useSWR("/api/conversations/get", fetcher<TFullConversation[]>);
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user.id) {
+    if (session?.user.id) {
       const userId = session.user.id;
       pusherClient.subscribe(userId);
 
       const updateConversations = (
         prevConversations: TFullConversation[],
-        updatedConversation: {
-          id: string;
-          message: TFullMessage;
-        }
+        updatedConversation: { id: string; message: TFullMessage }
       ) => {
         const { message, id } = updatedConversation;
 
-        return prevConversations.map((conversation) =>
-          conversation.id === id && message
-            ? {
-                ...conversation,
-                messages: [...conversation.messages, message],
-              }
-            : conversation
-        );
+        return prevConversations.map((conversation) => {
+          if (conversation.id !== id || !message) return conversation;
+
+          const existingMessageIndex = conversation.messages.findIndex(
+            (msg) => msg.id === message.id
+          );
+
+          if (existingMessageIndex > -1) {
+            const updatedMessages = [...conversation.messages];
+            updatedMessages[existingMessageIndex] = {
+              ...updatedMessages[existingMessageIndex],
+              seen: [...message.seen],
+            };
+            return {
+              ...conversation,
+              messages: updatedMessages,
+            };
+          } else {
+            return {
+              ...conversation,
+              messages: [...conversation.messages, message],
+            };
+          }
+        });
       };
 
       const conversationsUpdateHandler = (updatedConversation: {
@@ -59,7 +72,7 @@ const ConversationList = () => {
         pusherClient.unsubscribe(userId);
       };
     }
-  }, [mutate, session?.user.id, status]);
+  }, [mutate, session?.user.id]);
 
   if (isLoading) return <Loading number={5} />;
 

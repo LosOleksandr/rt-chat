@@ -53,6 +53,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     const updatedMessages = await prisma.message.findMany({
       where: {
+        conversationId,
         id: {
           in: insertedMessageIds.map((record) => record.messageId),
         },
