@@ -19,6 +19,7 @@ const ConversationBody = ({ messages }: TConversationBody) => {
   const { data: session } = useSession();
   const { mutate } = useSWRConfig();
   const { conversationId } = useConversations();
+
   const {
     ref: messageContainerRef,
     scrollToBottom,
@@ -64,7 +65,7 @@ const ConversationBody = ({ messages }: TConversationBody) => {
           ? prevMessages
           : [...prevMessages, newMessage];
 
-      const addMessage = async (message: TFullMessage) => {
+      const addMessageHandler = async (message: TFullMessage) => {
         mutate(
           `/api/conversations/${conversationId}`,
           (prev: TFullConversation | undefined) => {
@@ -76,11 +77,10 @@ const ConversationBody = ({ messages }: TConversationBody) => {
           },
           { revalidate: false }
         );
-
         await updatedSeenMessages();
       };
 
-      const markMessagesAsSeen = (seenMessages: TFullMessage[]) => {
+      const markMessagesAsSeenHandler = (seenMessages: TFullMessage[]) => {
         mutate(
           `/api/conversations/${conversationId}`,
           (prev: TFullConversation | undefined) => {
@@ -96,16 +96,16 @@ const ConversationBody = ({ messages }: TConversationBody) => {
         );
       };
 
-      pusherClient.bind("messages:new", addMessage);
-      pusherClient.bind("message:seen", markMessagesAsSeen);
+      pusherClient.bind("messages:new", addMessageHandler);
+      pusherClient.bind("message:seen", markMessagesAsSeenHandler);
 
       return () => {
-        pusherClient.unbind("messages:new", addMessage);
-        pusherClient.unbind("message:seen", markMessagesAsSeen);
+        pusherClient.unbind("messages:new", addMessageHandler);
+        pusherClient.unbind("message:seen", markMessagesAsSeenHandler);
         pusherClient.unsubscribe(conversationId);
       };
     }
-  }, [conversationId, mutate, updatedSeenMessages]);
+  }, [conversationId, messages, mutate, updatedSeenMessages]);
 
   return (
     <div className="min-h-0 max-h-full h-full w-full max-w-6xl mx-auto sm:py-4 py-2 relative">
